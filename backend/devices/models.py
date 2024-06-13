@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from backend.auth.models import User
+from backend.users.models import User
 
 
 class Warehouse(models.Model):
