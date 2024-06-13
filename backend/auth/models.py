@@ -18,7 +18,7 @@ class User(models.Model):
     user_id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=150, unique=True)
     password = models.CharField(max_length=128)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, db_index=True)
     role = models.CharField(max_length=50)  # TODO: Connect to a Role model
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)

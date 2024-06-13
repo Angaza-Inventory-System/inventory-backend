@@ -44,7 +44,7 @@ class Donor(models.Model):
     name = models.CharField(max_length=255)
     contact_info = models.CharField(max_length=255)
     address = models.TextField()
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, db_index=True)
     phone = models.CharField(max_length=20)
 
 
@@ -83,8 +83,8 @@ class Device(models.Model):
     type = models.CharField(max_length=100)
     make = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
-    serial_number = models.CharField(max_length=100, unique=True)
-    mac_id = models.CharField(max_length=100, unique=True)
+    serial_number = models.CharField(max_length=100, unique=True, db_index=True)
+    mac_id = models.CharField(max_length=100, unique=True, db_index=True)
     year_of_manufacture = models.IntegerField()
     shipment_date = models.DateField()
     date_received = models.DateField()
