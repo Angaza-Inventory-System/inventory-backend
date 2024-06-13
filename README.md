@@ -31,6 +31,8 @@ So far, the backend system consists of three Django apps:
 
 3. users:
 
--   Manages user roles and permissions.
--   Includes admin endpoints for managing users.
+-   Endpoints for permission verification.
 -   Implements role-based access control.
+
+4. admin (TODO):
+-  Manages user accounts and roles.
