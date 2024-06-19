@@ -1,8 +1,11 @@
 import uuid
+
+from django.core.validators import EmailValidator, MinLengthValidator, RegexValidator
 from django.db import models
-from backend.users.models import User
 from django.utils.translation import gettext_lazy as _
-from django.core.validators import RegexValidator, MinLengthValidator, EmailValidator
+
+from backend.users.models import User
+
 
 class Warehouse(models.Model):
     """
@@ -30,31 +33,21 @@ class Warehouse(models.Model):
                 - Must be between 1 and 20 characters in length.
     """
 
-
     warehouse_number = models.IntegerField(
         primary_key=True,
-        help_text="Physical identifier for the warehouse, not randomly generated."
+        help_text="Physical identifier for the warehouse, not randomly generated.",
     )
-    name = models.CharField(
-        max_length=255,
-        help_text="Name of the warehouse."
-    )
+    name = models.CharField(max_length=255, help_text="Name of the warehouse.")
     country = models.CharField(
-        max_length=100,
-        help_text="Country where the warehouse is located."
+        max_length=100, help_text="Country where the warehouse is located."
     )
     city = models.CharField(
-        max_length=100,
-        help_text="City where the warehouse is located."
+        max_length=100, help_text="City where the warehouse is located."
     )
     postal_code = models.CharField(
-        max_length=20,
-        help_text="Postal code of the warehouse's location."
+        max_length=20, help_text="Postal code of the warehouse's location."
     )
-    phone = models.CharField(
-        max_length=20,
-        help_text="Phone number of the warehouse."
-    )
+    phone = models.CharField(max_length=20, help_text="Phone number of the warehouse.")
 
 
 class Donor(models.Model):
@@ -84,33 +77,24 @@ class Donor(models.Model):
     """
 
     donor_id = models.AutoField(
-        primary_key=True,
-        help_text="Unique identifier for the donor."
+        primary_key=True, help_text="Unique identifier for the donor."
     )
-    name = models.CharField(
-        max_length=255,
-        help_text="Name of the donor."
-    )
+    name = models.CharField(max_length=255, help_text="Name of the donor.")
     contact_info = models.CharField(
-        max_length=255,
-        help_text="Contact information of the donor."
+        max_length=255, help_text="Contact information of the donor."
     )
-    address = models.TextField(
-        help_text="Address of the donor."
-    )
+    address = models.TextField(help_text="Address of the donor.")
     email = models.EmailField(
         unique=True,
         db_index=True,
         validators=[EmailValidator()],
-        help_text="Email address of the donor."
+        help_text="Email address of the donor.",
     )
-    phone = models.CharField(
-        max_length=20,
-        help_text="Phone number of the donor."
-    )
+    phone = models.CharField(max_length=20, help_text="Phone number of the donor.")
+
 
 class Device(models.Model):
-      """
+    """
     Represents a device in the inventory system.
 
     Attributes:
@@ -187,103 +171,75 @@ class Device(models.Model):
             - Constraints:
                 - No specific constraints mentioned.
     """
-      device_id = models.UUIDField(
+
+    device_id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
         editable=False,
-        help_text="Unique identifier for the device."
+        help_text="Unique identifier for the device.",
     )
-      type = models.CharField(
-        max_length=100,
-        help_text="Type of the device."
-    )
-      make = models.CharField(
-        max_length=100,
-        help_text="Make of the device."
-    )
-      model = models.CharField(
-        max_length=100,
-        help_text="Model of the device."
-    )
-      serial_number = models.CharField(
+    type = models.CharField(max_length=100, help_text="Type of the device.")
+    make = models.CharField(max_length=100, help_text="Make of the device.")
+    model = models.CharField(max_length=100, help_text="Model of the device.")
+    serial_number = models.CharField(
         max_length=100,
         unique=True,
         db_index=True,
-        help_text="Serial number of the device (unique identifier)."
+        help_text="Serial number of the device (unique identifier).",
     )
-      mac_id = models.CharField(
+    mac_id = models.CharField(
         max_length=100,
         unique=True,
         db_index=True,
-        help_text="MAC ID of the device (unique identifier)."
+        help_text="MAC ID of the device (unique identifier).",
     )
-      year_of_manufacture = models.IntegerField(
+    year_of_manufacture = models.IntegerField(
         help_text="Year of manufacture of the device."
     )
-      shipment_date = models.DateField(
-        help_text="Date when the device was shipped."
-    )
-      date_received = models.DateField(
-        help_text="Date when the device was received."
-    )
-      received_by = models.ForeignKey(
+    shipment_date = models.DateField(help_text="Date when the device was shipped.")
+    date_received = models.DateField(help_text="Date when the device was received.")
+    received_by = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
         null=True,
         related_name="received_devices",
-        help_text="User who received the device."
+        help_text="User who received the device.",
     )
-      physical_condition = models.CharField(
-        max_length=100,
-        help_text="Physical condition of the device."
+    physical_condition = models.CharField(
+        max_length=100, help_text="Physical condition of the device."
     )
-      specifications = models.TextField(
-        help_text="Specifications of the device."
+    specifications = models.TextField(help_text="Specifications of the device.")
+    operating_system = models.CharField(
+        max_length=100, help_text="Operating system of the device."
     )
-      operating_system = models.CharField(
-        max_length=100,
-        help_text="Operating system of the device."
+    accessories = models.TextField(help_text="Accessories of the device.")
+    donor = models.ForeignKey(
+        Donor, on_delete=models.CASCADE, help_text="Donor of the device."
     )
-      accessories = models.TextField(
-        help_text="Accessories of the device."
-    )
-      donor = models.ForeignKey(
-        Donor,
-        on_delete=models.CASCADE,
-        help_text="Donor of the device."
-    )
-      date_of_donation = models.DateField(
-        help_text="Date when the device was donated."
-    )
-      value = models.DecimalField(
+    date_of_donation = models.DateField(help_text="Date when the device was donated.")
+    value = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        help_text="Value of the device, provided by accounting."
+        help_text="Value of the device, provided by accounting.",
     )
-      location = models.ForeignKey(
+    location = models.ForeignKey(
         Warehouse,
         on_delete=models.SET_NULL,
         null=True,
-        help_text="Location of the device in the warehouse."
+        help_text="Location of the device in the warehouse.",
     )
-      assigned_user = models.ForeignKey(
+    assigned_user = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
         null=True,
         related_name="assigned_devices",
-        help_text="User to whom the device is assigned."
+        help_text="User to whom the device is assigned.",
     )
-      status = models.CharField(
-        max_length=100,
-        help_text="Status of the device."
+    status = models.CharField(max_length=100, help_text="Status of the device.")
+    distributor = models.CharField(
+        max_length=100, help_text="Distributor of the device."
     )
-      distributor = models.CharField(
-        max_length=100,
-        help_text="Distributor of the device."
-    )
-      warranty_service_info = models.TextField(
+    warranty_service_info = models.TextField(
         help_text="Warranty and service information of the device."
     )
-      notes = models.TextField(
-        help_text="Additional notes about the device."
-    )
+    notes = models.TextField(help_text="Additional notes about the device.")
