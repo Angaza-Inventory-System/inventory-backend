@@ -1,4 +1,10 @@
-# devices/serializers.py
+"""
+Serializer for User Model.
+
+Includes:
+- UserSerializer: Serializes/deserializes User objects.
+"""
+
 from rest_framework import serializers
 from .models import User
 
