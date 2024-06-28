@@ -80,7 +80,6 @@ class Donor(models.Model):
 
 
 class Device(models.Model):
-    
     """
     Represents a device in the inventory system.
 
@@ -188,18 +187,15 @@ class Device(models.Model):
     operating_system = models.CharField(max_length=100)
     accessories = models.TextField()
     donor = models.ForeignKey(
-        Donor, 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        related_name="donated_devices", 
+        Donor,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="donated_devices",
     )
     date_of_donation = models.DateField()
     value = models.DecimalField(max_digits=10, decimal_places=2)
     location = models.ForeignKey(
-        Warehouse,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="stored_items"
+        Warehouse, on_delete=models.SET_NULL, null=True, related_name="stored_items"
     )
     assigned_user = models.ForeignKey(
         User,

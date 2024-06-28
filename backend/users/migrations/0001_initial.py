@@ -8,20 +8,77 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='User',
+            name="User",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('username', models.CharField(help_text='Minimum Length: 2 Characters. Maximum length: 50 Characters.', max_length=50, unique=True, validators=[django.core.validators.MinLengthValidator(2)])),
-                ('password', models.CharField(help_text='Minimum Length: 10 Characters. Maximum Length: 128 Characters.', max_length=128, validators=[django.core.validators.RegexValidator(message='Password must be at least 10 characters long and include at least one digit, one special character, and one uppercase letter.', regex='^(?=.*\\d)(?=.*[!@#$%^&*])(?=.*[A-Z]).{10,128}$')])),
-                ('email', models.EmailField(db_index=True, help_text='Must be a valid Email.', max_length=254, unique=True, validators=[django.core.validators.EmailValidator()])),
-                ('role', models.CharField(help_text='Minimum Length: 2 Characters. Maximum Length: 50 Characters.', max_length=50, validators=[django.core.validators.MinLengthValidator(2)])),
-                ('first_name', models.CharField(help_text='Minimum Length: 2 Characters. Maximum Length: 30 Characters.', max_length=30, validators=[django.core.validators.MinLengthValidator(2)])),
-                ('last_name', models.CharField(help_text='Minimum Length: 2 Characters. Maximum Length: 30 Characters.', max_length=30, validators=[django.core.validators.MinLengthValidator(2)])),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "username",
+                    models.CharField(
+                        help_text="Minimum Length: 2 Characters. Maximum length: 50 Characters.",
+                        max_length=50,
+                        unique=True,
+                        validators=[django.core.validators.MinLengthValidator(2)],
+                    ),
+                ),
+                (
+                    "password",
+                    models.CharField(
+                        help_text="Minimum Length: 10 Characters. Maximum Length: 128 Characters.",
+                        max_length=128,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                message="Password must be at least 10 characters long and include at least one digit, one special character, and one uppercase letter.",
+                                regex="^(?=.*\\d)(?=.*[!@#$%^&*])(?=.*[A-Z]).{10,128}$",
+                            )
+                        ],
+                    ),
+                ),
+                (
+                    "email",
+                    models.EmailField(
+                        db_index=True,
+                        help_text="Must be a valid Email.",
+                        max_length=254,
+                        unique=True,
+                        validators=[django.core.validators.EmailValidator()],
+                    ),
+                ),
+                (
+                    "role",
+                    models.CharField(
+                        help_text="Minimum Length: 2 Characters. Maximum Length: 50 Characters.",
+                        max_length=50,
+                        validators=[django.core.validators.MinLengthValidator(2)],
+                    ),
+                ),
+                (
+                    "first_name",
+                    models.CharField(
+                        help_text="Minimum Length: 2 Characters. Maximum Length: 30 Characters.",
+                        max_length=30,
+                        validators=[django.core.validators.MinLengthValidator(2)],
+                    ),
+                ),
+                (
+                    "last_name",
+                    models.CharField(
+                        help_text="Minimum Length: 2 Characters. Maximum Length: 30 Characters.",
+                        max_length=30,
+                        validators=[django.core.validators.MinLengthValidator(2)],
+                    ),
+                ),
             ],
         ),
     ]

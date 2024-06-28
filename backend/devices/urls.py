@@ -23,13 +23,25 @@ Endpoints:
 """
 
 from django.urls import path
-from .views import DeviceListCreate, DeviceRetrieveUpdateDestroy, WarehouseListCreate, WarehouseRetrieveUpdateDestroy, DonorListCreate, DonorRetrieveUpdateDestroy
+
+from .views import (
+    DeviceListCreate,
+    DeviceRetrieveUpdateDestroy,
+    DonorListCreate,
+    DonorRetrieveUpdateDestroy,
+    WarehouseListCreate,
+    WarehouseRetrieveUpdateDestroy,
+)
 
 urlpatterns = [
-    path('', DeviceListCreate.as_view(), name='device-list-create'),
-    path('<uuid:pk>/', DeviceRetrieveUpdateDestroy.as_view(), name='device-detail'),
-    path('warehouses/', WarehouseListCreate.as_view(), name='warehouse-list-create'),
-    path('warehouses/<int:pk>/', WarehouseRetrieveUpdateDestroy.as_view(), name='warehouse-detail'),
-    path('donors/', DonorListCreate.as_view(), name='donor-list-create'),
-    path('donors/<int:pk>/', DonorRetrieveUpdateDestroy.as_view(), name='donor-detail'),
+    path("", DeviceListCreate.as_view(), name="device-list-create"),
+    path("<uuid:pk>/", DeviceRetrieveUpdateDestroy.as_view(), name="device-detail"),
+    path("warehouses/", WarehouseListCreate.as_view(), name="warehouse-list-create"),
+    path(
+        "warehouses/<int:pk>/",
+        WarehouseRetrieveUpdateDestroy.as_view(),
+        name="warehouse-detail",
+    ),
+    path("donors/", DonorListCreate.as_view(), name="donor-list-create"),
+    path("donors/<int:pk>/", DonorRetrieveUpdateDestroy.as_view(), name="donor-detail"),
 ]

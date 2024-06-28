@@ -10,14 +10,16 @@ Serializers:
 """
 
 from rest_framework import generics
+
 from .models import JWTToken
 from .serializers import AuthSerializer
+
 
 class AuthListCreate(generics.ListCreateAPIView):
     queryset = JWTToken.objects.all()
     serializer_class = AuthSerializer
 
+
 class AuthRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = JWTToken.objects.all()
     serializer_class = AuthSerializer
-

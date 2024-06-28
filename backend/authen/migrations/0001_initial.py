@@ -9,19 +9,24 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('users', '0002_alter_user_email_alter_user_first_name_and_more'),
+        ("users", "0002_alter_user_email_alter_user_first_name_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='JWTToken',
+            name="JWTToken",
             fields=[
-                ('token_id', models.AutoField(primary_key=True, serialize=False)),
-                ('token', models.TextField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('expires_at', models.DateTimeField()),
-                ('is_blacklisted', models.BooleanField(default=False)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.user')),
+                ("token_id", models.AutoField(primary_key=True, serialize=False)),
+                ("token", models.TextField()),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("expires_at", models.DateTimeField()),
+                ("is_blacklisted", models.BooleanField(default=False)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="users.user"
+                    ),
+                ),
             ],
         ),
     ]

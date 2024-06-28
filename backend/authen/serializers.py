@@ -6,9 +6,11 @@ Serializers:
 """
 
 from rest_framework import serializers
+
 from .models import JWTToken
+
 
 class AuthSerializer(serializers.ModelSerializer):
     class Meta:
         model = JWTToken
-        fields = '__all__'
+        fields = "__all__"

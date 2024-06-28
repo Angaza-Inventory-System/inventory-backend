@@ -16,28 +16,35 @@ Serializers:
 """
 
 from rest_framework import generics
-from .models import Device, Warehouse, Donor
-from .serializers import DeviceSerializer, WarehouseSerializer, DonorSerializer
+
+from .models import Device, Donor, Warehouse
+from .serializers import DeviceSerializer, DonorSerializer, WarehouseSerializer
+
 
 class DeviceListCreate(generics.ListCreateAPIView):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
 
+
 class DeviceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
+
 
 class WarehouseListCreate(generics.ListCreateAPIView):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
 
+
 class WarehouseRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
 
+
 class DonorListCreate(generics.ListCreateAPIView):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
+
 
 class DonorRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Donor.objects.all()

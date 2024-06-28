@@ -11,9 +11,10 @@ Endpoints:
 """
 
 from django.urls import path
+
 from .views import AuthListCreate, AuthRetrieveUpdateDestroy
 
 urlpatterns = [
-    path('auth/', AuthListCreate.as_view(), name='auth-list-create'),
-    path('auth/<int:pk>/', AuthRetrieveUpdateDestroy.as_view(), name='auth-detail'),
+    path("auth/", AuthListCreate.as_view(), name="auth-list-create"),
+    path("auth/<int:pk>/", AuthRetrieveUpdateDestroy.as_view(), name="auth-detail"),
 ]
