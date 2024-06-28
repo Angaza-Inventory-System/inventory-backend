@@ -20,11 +20,13 @@ Serializers:
 - DonorSerializer: Serializes Donor model data for API interactions.
 """
 
-from rest_framework import generics, viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, generics, viewsets
+
 from .models import Device, Donor, Warehouse
-from .serializers import DeviceSerializer, DonorSerializer, WarehouseSerializer
 from .pagination import CustomPagination
+from .serializers import DeviceSerializer, DonorSerializer, WarehouseSerializer
+
 
 class DeviceViewSet(viewsets.ModelViewSet):
     queryset = Device.objects.all()
@@ -32,19 +34,19 @@ class DeviceViewSet(viewsets.ModelViewSet):
     pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = {
-        'type': ['exact', 'icontains'],
-        'make': ['exact', 'icontains'],
-        'model': ['exact', 'icontains'],
-        'year_of_manufacture': ['exact', 'gte', 'lte'],
-        'status': ['exact'],
-        'operating_system': ['exact', 'icontains'],
-        'physical_condition': ['exact', 'icontains'],
-        'donor__name': ['exact', 'icontains'],
-        'location__name': ['exact', 'icontains'],
-        'assigned_user__username': ['exact', 'icontains'],
+        "type": ["exact", "icontains"],
+        "make": ["exact", "icontains"],
+        "model": ["exact", "icontains"],
+        "year_of_manufacture": ["exact", "gte", "lte"],
+        "status": ["exact"],
+        "operating_system": ["exact", "icontains"],
+        "physical_condition": ["exact", "icontains"],
+        "donor__name": ["exact", "icontains"],
+        "location__name": ["exact", "icontains"],
+        "assigned_user__username": ["exact", "icontains"],
     }
-    ordering_fields = ['type', 'make', 'model', 'year_of_manufacture', 'status']
-    ordering = ['type']
+    ordering_fields = ["type", "make", "model", "year_of_manufacture", "status"]
+    ordering = ["type"]
 
 
 class WarehouseViewSet(viewsets.ModelViewSet):
@@ -52,15 +54,22 @@ class WarehouseViewSet(viewsets.ModelViewSet):
     serializer_class = WarehouseSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = {
-        'warehouse_number': ['exact'],
-        'name': ['icontains'],
-        'country': ['exact', 'icontains'],
-        'city': ['exact', 'icontains'],
-        'postal_code': ['exact'],
-        'phone': ['exact'],
+        "warehouse_number": ["exact"],
+        "name": ["icontains"],
+        "country": ["exact", "icontains"],
+        "city": ["exact", "icontains"],
+        "postal_code": ["exact"],
+        "phone": ["exact"],
     }
-    ordering_fields = ['warehouse_number', 'name', 'country', 'city', 'postal_code', 'phone']
-    ordering = ['warehouse_number']
+    ordering_fields = [
+        "warehouse_number",
+        "name",
+        "country",
+        "city",
+        "postal_code",
+        "phone",
+    ]
+    ordering = ["warehouse_number"]
 
 
 class DonorViewSet(viewsets.ModelViewSet):
@@ -68,14 +77,14 @@ class DonorViewSet(viewsets.ModelViewSet):
     serializer_class = DonorSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = {
-        'name': ['icontains'],
-        'contact_info': ['icontains'],
-        'address': ['icontains'],
-        'email': ['exact', 'icontains'],
-        'phone': ['exact'],
+        "name": ["icontains"],
+        "contact_info": ["icontains"],
+        "address": ["icontains"],
+        "email": ["exact", "icontains"],
+        "phone": ["exact"],
     }
-    ordering_fields = ['name', 'email', 'phone']
-    ordering = ['name']
+    ordering_fields = ["name", "email", "phone"]
+    ordering = ["name"]
 
 
 class DeviceListCreate(generics.ListCreateAPIView):
