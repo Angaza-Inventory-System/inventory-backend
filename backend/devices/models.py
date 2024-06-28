@@ -33,21 +33,12 @@ class Warehouse(models.Model):
                 - Must be between 1 and 20 characters in length.
     """
 
-    warehouse_number = models.IntegerField(
-        primary_key=True,
-        help_text="Physical identifier for the warehouse, not randomly generated.",
-    )
-    name = models.CharField(max_length=255, help_text="Name of the warehouse.")
-    country = models.CharField(
-        max_length=100, help_text="Country where the warehouse is located."
-    )
-    city = models.CharField(
-        max_length=100, help_text="City where the warehouse is located."
-    )
-    postal_code = models.CharField(
-        max_length=20, help_text="Postal code of the warehouse's location."
-    )
-    phone = models.CharField(max_length=20, help_text="Phone number of the warehouse.")
+    warehouse_number = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=255)
+    country = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    postal_code = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20)
 
 
 class Donor(models.Model):
@@ -76,24 +67,20 @@ class Donor(models.Model):
                 - Must be between 1 and 20 characters in length.
     """
 
-    donor_id = models.AutoField(
-        primary_key=True, help_text="Unique identifier for the donor."
-    )
-    name = models.CharField(max_length=255, help_text="Name of the donor.")
-    contact_info = models.CharField(
-        max_length=255, help_text="Contact information of the donor."
-    )
-    address = models.TextField(help_text="Address of the donor.")
+    donor_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    contact_info = models.CharField(max_length=255)
+    address = models.TextField()
     email = models.EmailField(
         unique=True,
         db_index=True,
         validators=[EmailValidator()],
-        help_text="Email address of the donor.",
     )
-    phone = models.CharField(max_length=20, help_text="Phone number of the donor.")
+    phone = models.CharField(max_length=20)
 
 
 class Device(models.Model):
+    
     """
     Represents a device in the inventory system.
 
@@ -120,13 +107,13 @@ class Device(models.Model):
                 - Must be unique (CharField with unique=True).
         year_of_manufacture (IntegerField): The year of manufacture of the device.
             - Constraints:
-                - No specific constraints mentioned.
+                - No specific constraints.
         shipment_date (DateField): The date when the device was shipped.
             - Constraints:
-                - No specific constraints mentioned.
+                - No specific constraints.
         date_received (DateField): The date when the device was received.
             - Constraints:
-                - No specific constraints mentioned.
+                - No specific constraints.
         received_by (ForeignKey): The user who received the device.
             - Constraints:
                 - Must be a foreign key to the User model (ForeignKey).
@@ -135,19 +122,19 @@ class Device(models.Model):
                 - Must be between 1 and 100 characters in length.
         specifications (TextField): The specifications of the device.
             - Constraints:
-                - No specific constraints mentioned.
+                - No specific constraints.
         operating_system (CharField): The operating system of the device.
             - Constraints:
                 - Must be between 1 and 100 characters in length.
         accessories (TextField): The accessories of the device.
             - Constraints:
-                - No specific constraints mentioned.
+                - No specific constraints.
         donor (ForeignKey): The donor of the device.
             - Constraints:
                 - Must be a foreign key to the Donor model (ForeignKey).
         date_of_donation (DateField): The date when the device was donated.
             - Constraints:
-                - No specific constraints mentioned.
+                - No specific constraints.
         value (DecimalField): The value of the device, provided by accounting.
             - Constraints:
                 - Must be a decimal number with up to 10 digits and 2 decimal places (DecimalField).
@@ -166,26 +153,20 @@ class Device(models.Model):
         warranty_service_info (TextField): The warranty and service information
             of the device.
             - Constraints:
-                - No specific constraints mentioned.
+                - No specific constraints.
         notes (TextField): Additional notes about the device.
             - Constraints:
-                - No specific constraints mentioned.
+                - No specific constraints.
     """
 
-    device_id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
-        help_text="Unique identifier for the device.",
-    )
-    type = models.CharField(max_length=100, help_text="Type of the device.")
-    make = models.CharField(max_length=100, help_text="Make of the device.")
-    model = models.CharField(max_length=100, help_text="Model of the device.")
+    device_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    type = models.CharField(max_length=100)
+    make = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
     serial_number = models.CharField(
         max_length=100,
         unique=True,
         db_index=True,
-        help_text="Serial number of the device (unique identifier).",
     )
     mac_id = models.CharField(
         max_length=100,
@@ -193,53 +174,40 @@ class Device(models.Model):
         db_index=True,
         help_text="MAC ID of the device (unique identifier).",
     )
-    year_of_manufacture = models.IntegerField(
-        help_text="Year of manufacture of the device."
-    )
-    shipment_date = models.DateField(help_text="Date when the device was shipped.")
-    date_received = models.DateField(help_text="Date when the device was received.")
+    year_of_manufacture = models.IntegerField()
+    shipment_date = models.DateField()
+    date_received = models.DateField()
     received_by = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
         null=True,
         related_name="received_devices",
-        help_text="User who received the device.",
     )
-    physical_condition = models.CharField(
-        max_length=100, help_text="Physical condition of the device."
-    )
-    specifications = models.TextField(help_text="Specifications of the device.")
-    operating_system = models.CharField(
-        max_length=100, help_text="Operating system of the device."
-    )
-    accessories = models.TextField(help_text="Accessories of the device.")
+    physical_condition = models.CharField(max_length=100)
+    specifications = models.TextField()
+    operating_system = models.CharField(max_length=100)
+    accessories = models.TextField()
     donor = models.ForeignKey(
-        Donor, on_delete=models.CASCADE, help_text="Donor of the device."
+        Donor, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        related_name="donated_devices", 
     )
-    date_of_donation = models.DateField(help_text="Date when the device was donated.")
-    value = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        help_text="Value of the device, provided by accounting.",
-    )
+    date_of_donation = models.DateField()
+    value = models.DecimalField(max_digits=10, decimal_places=2)
     location = models.ForeignKey(
         Warehouse,
         on_delete=models.SET_NULL,
         null=True,
-        help_text="Location of the device in the warehouse.",
+        related_name="stored_items"
     )
     assigned_user = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
         null=True,
         related_name="assigned_devices",
-        help_text="User to whom the device is assigned.",
     )
-    status = models.CharField(max_length=100, help_text="Status of the device.")
-    distributor = models.CharField(
-        max_length=100, help_text="Distributor of the device."
-    )
-    warranty_service_info = models.TextField(
-        help_text="Warranty and service information of the device."
-    )
-    notes = models.TextField(help_text="Additional notes about the device.")
+    status = models.CharField(max_length=100)
+    distributor = models.CharField(max_length=100)
+    warranty_service_info = models.TextField()
+    notes = models.TextField()

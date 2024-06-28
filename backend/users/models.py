@@ -3,7 +3,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-# Create your models here.
 class User(models.Model):
     """
     Attributes:
@@ -55,20 +54,16 @@ class User(models.Model):
         unique=True,
         db_index=True,
         validators=[EmailValidator()],  # AI Generated Line
-        help_text=_("Must be a valid Email."),
     )
     role = models.CharField(
         max_length=50,
         validators=[MinLengthValidator(2)],
-        help_text=_("Minimum Length: 2 Characters. Maximum Length: 50 Characters."),
     )
     first_name = models.CharField(
         max_length=30,
         validators=[MinLengthValidator(2)],
-        help_text=_("Minimum Length: 2 Characters. Maximum Length: 30 Characters."),
     )
     last_name = models.CharField(
         max_length=30,
         validators=[MinLengthValidator(2)],
-        help_text=_("Minimum Length: 2 Characters. Maximum Length: 30 Characters."),
     )
