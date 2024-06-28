@@ -1,3 +1,38 @@
+"""
+Unit tests for CRUD operations via API endpoints for managing devices, warehouses, and donors.
+
+Endpoints:
+- {BaseURL}/devices/:
+    - GET: Retrieve a list of all devices or create a new device.
+- {BaseURL}/devices/<int:pk>/
+    - GET: Retrieve details of a specific device.
+    - PUT: Update details of a specific device.
+    - DELETE: Delete a specific device.
+- {BaseURL}/warehouses/:
+    - GET: Retrieve a list of all warehouses or create a new warehouse.
+- {BaseURL}/warehouses/<int:pk>/
+    - GET: Retrieve details of a specific warehouse.
+    - PUT: Update details of a specific warehouse.
+    - DELETE: Delete a specific warehouse.
+- {BaseURL}/donors/:
+    - GET: Retrieve a list of all donors or create a new donor.
+- {BaseURL}/donors/<int:pk>/
+    - GET: Retrieve details of a specific donor.
+    - PUT: Update details of a specific donor.
+    - DELETE: Delete a specific donor.
+
+Test Cases:
+- test_get_devices: Tests GET request to retrieve all devices.
+- test_get_warehouses: Tests GET request to retrieve all warehouses.
+- test_get_donors: Tests GET request to retrieve all donors.
+- test_update_device: Tests PUT request to update details of a device.
+- test_delete_device: Tests DELETE request to delete a device.
+- test_update_warehouse: Tests PUT request to update details of a warehouse.
+- test_delete_warehouse: Tests DELETE request to delete a warehouse.
+- test_update_donor: Tests PUT request to update details of a donor.
+- test_delete_donor: Tests DELETE request to delete a donor.
+"""
+
 import datetime
 import random
 

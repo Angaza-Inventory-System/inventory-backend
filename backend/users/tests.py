@@ -1,3 +1,23 @@
+"""
+Unit tests for CRUD operations via API endpoints for managing users.
+
+Endpoints:
+- {BaseURL}/users/:
+    - POST: Create a new user.
+- {BaseURL}/users/<int:pk>/
+    - GET: Retrieve details of a specific user.
+    - PUT: Update details of a specific user.
+    - DELETE: Delete a specific user.
+
+Test Cases:
+- test_create_user: Tests POST request to create a new user.
+- test_create_user_invalid_email: Tests POST request with invalid email format.
+- test_update_user: Tests PUT request to update details of a user.
+- test_update_user_invalid_password: Tests PUT request with invalid password format.
+- test_delete_user: Tests DELETE request to delete a user.
+- test_retrieve_user: Tests GET request to retrieve details of a user.
+"""
+
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status

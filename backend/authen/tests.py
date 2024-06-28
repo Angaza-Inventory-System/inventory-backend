@@ -1,3 +1,22 @@
+"""
+Unit tests for JWTToken CRUD operations via API endpoints.
+
+Endpoints:
+- {BaseURL}/auth/:
+    - GET: Retrieve a list of all authentication entries or create a new entry.
+- {BaseURL}/auth/<int:pk>/:
+    - GET: Retrieve details of a specific authentication entry.
+    - PUT: Update details of a specific authentication entry.
+    - DELETE: Delete a specific authentication entry.
+
+Test Cases:
+- test_get_all_jwt_tokens: Tests GET request to retrieve all JWT tokens.
+- test_create_jwt_token: Tests POST request to create a new JWT token.
+- test_get_jwt_token_details: Tests GET request to retrieve details of a JWT token.
+- test_update_jwt_token: Tests PUT request to update details of a JWT token.
+- test_delete_jwt_token: Tests DELETE request to delete a JWT token.
+"""
+
 import unittest
 from datetime import datetime, timedelta
 
