@@ -195,7 +195,10 @@ class Device(models.Model):
     date_of_donation = models.DateField()
     value = models.DecimalField(max_digits=10, decimal_places=2)
     location = models.ForeignKey(
-        Warehouse, on_delete=models.SET_NULL, null=True, related_name="stored_items"
+        Warehouse, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        related_name="stored_items"
     )
     assigned_user = models.ForeignKey(
         User,

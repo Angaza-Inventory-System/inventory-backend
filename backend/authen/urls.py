@@ -2,7 +2,7 @@
 URL patterns for managing authentication through APIs.
 
 Endpoints:
-- /api/auth/:
+- {BaseURL}/auth/:
     - GET: Retrieve a list of all authentication entries or create a new entry.
 - /api/auth/<int:pk>/:
     - GET: Retrieve details of a specific authentication entry.

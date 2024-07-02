@@ -2,21 +2,23 @@
 URL patterns for managing devices, warehouses, and donors through APIs.
 
 Endpoints:
-- /api/devices/:
+- {BaseURL}/devices/:
     - GET: Retrieve a list of all devices or create a new device.
-- /api/devices/<uuid:pk>/:
+- {BaseURL}/devices/<uuid:pk>/:
     - GET: Retrieve details of a specific device.
     - PUT: Update details of a specific device.
     - DELETE: Delete a specific device.
-- /api/warehouses/:
+    
+- {BaseURL}/devices/warehouses/:
     - GET: Retrieve a list of all warehouses or create a new warehouse.
-- /api/warehouses/<int:pk>/:
+- {BaseURL}/warehouses/<int:pk>/:
     - GET: Retrieve details of a specific warehouse.
     - PUT: Update details of a specific warehouse.
     - DELETE: Delete a specific warehouse.
-- /api/donors/:
+
+- {BaseURL}/donors/:
     - GET: Retrieve a list of all donors or create a new donor.
-- /api/donors/<int:pk>/:
+- {BaseURL}/donors/<int:pk>/:
     - GET: Retrieve details of a specific donor.
     - PUT: Update details of a specific donor.
     - DELETE: Delete a specific donor.
@@ -26,9 +28,9 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from .views import (
-    DeviceViewSet,
     DeviceListCreate,
     DeviceRetrieveUpdateDestroy,
+    DeviceViewSet,
     DonorListCreate,
     DonorRetrieveUpdateDestroy,
     DonorViewSet,
