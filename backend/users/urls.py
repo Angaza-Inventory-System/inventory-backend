@@ -2,12 +2,14 @@
 URL patterns for managing users through APIs.
 
 Endpoints:
-- /api/users/:
-    - GET: Retrieve a list of all users or create a new user.
-- /api/users/<int:pk>/:
-    - GET: Retrieve details of a specific user.
-    - PUT: Update details of a specific user.
-    - DELETE: Delete a specific user.
+    Users:
+        - {BaseURL}/users/:
+            - GET: Retrieve a list of all users
+            - POST: Create a new user.
+
+        - {BaseURL}/users/<int:pk>/:
+            - PUT: Update details of a specific user.
+            - DELETE: Delete a specific user.
 """
 
 from django.urls import path

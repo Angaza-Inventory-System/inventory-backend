@@ -2,26 +2,32 @@
 URL patterns for managing devices, warehouses, and donors through APIs.
 
 Endpoints:
-- {BaseURL}/devices/:
-    - GET: Retrieve a list of all devices or create a new device.
-- {BaseURL}/devices/<uuid:pk>/:
-    - GET: Retrieve details of a specific device.
-    - PUT: Update details of a specific device.
-    - DELETE: Delete a specific device.
-    
-- {BaseURL}/devices/warehouses/:
-    - GET: Retrieve a list of all warehouses or create a new warehouse.
-- {BaseURL}/warehouses/<int:pk>/:
-    - GET: Retrieve details of a specific warehouse.
-    - PUT: Update details of a specific warehouse.
-    - DELETE: Delete a specific warehouse.
+    Devices:
+        - {BaseURL}/devices/devices/:
+            - GET: Retrieve a list of all devices WITH pagination and filtering 
+            - POST: Create a new device.
 
-- {BaseURL}/donors/:
-    - GET: Retrieve a list of all donors or create a new donor.
-- {BaseURL}/donors/<int:pk>/:
-    - GET: Retrieve details of a specific donor.
-    - PUT: Update details of a specific donor.
-    - DELETE: Delete a specific donor.
+        - {BaseURL}/devices/devices/<uuid:pk>/:
+            - PUT: Update details of a specific device.
+            - DELETE: Delete a specific device.
+
+    Warehouses:
+        - {BaseURL}/devices/warehouses/:
+            - GET: Retrieve a list of all warehouses.
+            - POST: Create a new warehouse.
+
+        - {BaseURL}/devices/warehouses/<int:pk>/:
+            - PUT: Update details of a specific warehouse.
+            - DELETE: Delete a specific warehouse.
+
+    Donors:
+        - {BaseURL}/devices/donors/:
+            - GET: Retrieve a list of all donors or create a new donor.
+            - POST: Create a new device.
+
+        - {BaseURL}/devices/donors/<int:pk>/:
+            - PUT: Update details of a specific donor.
+            - DELETE: Delete a specific donor.
 """
 
 from django.urls import path, include
