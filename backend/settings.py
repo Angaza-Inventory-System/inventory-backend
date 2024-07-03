@@ -66,9 +66,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "backend.urls"
 
-CORS_ALLOWED_ORIGINS = [
-       "http://localhost:5000"
-]
+CORS_ALLOWED_ORIGINS = ["http://localhost:5000"]
 
 TEMPLATES = [
     {
