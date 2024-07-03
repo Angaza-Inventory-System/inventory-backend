@@ -9,9 +9,11 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-from pathlib import Path
-from dotenv import load_dotenv
+
 import os
+from pathlib import Path
+
+from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
@@ -32,7 +34,9 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
 INSTALLED_APPS = [
     "corsheaders",
     "django.contrib.admin",
@@ -46,6 +50,7 @@ INSTALLED_APPS = [
     "backend.authen",
     "backend.devices",
     "backend.users",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
