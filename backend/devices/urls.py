@@ -53,17 +53,21 @@ router.register(r"donors", DonorViewSet, basename="donor")
 urlpatterns = [
     path("", include(router.urls)),
     path("devices/", DeviceListCreate.as_view(), name="device-list-create"),
+
     path(
         "devices/<uuid:pk>/",
         DeviceRetrieveUpdateDestroy.as_view(),
         name="device-detail",
     ),
+
     path("warehouses/", WarehouseListCreate.as_view(), name="warehouse-list-create"),
+
     path(
         "warehouses/<int:pk>/",
         WarehouseRetrieveUpdateDestroy.as_view(),
         name="warehouse-detail",
     ),
+    
     path("donors/", DonorListCreate.as_view(), name="donor-list-create"),
     path("donors/<int:pk>/", DonorRetrieveUpdateDestroy.as_view(), name="donor-detail"),
 ]

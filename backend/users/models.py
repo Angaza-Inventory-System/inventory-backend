@@ -1,4 +1,5 @@
 from django.core.validators import EmailValidator, MinLengthValidator, RegexValidator
+from django.contrib.auth.hashers import make_password
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -67,3 +68,8 @@ class User(models.Model):
         max_length=30,
         validators=[MinLengthValidator(2)],
     )
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # 
+            self.password = make_password(self.password)
+        super().save(*args, **kwargs)
