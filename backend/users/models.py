@@ -1,9 +1,26 @@
-from django.core.validators import EmailValidator, MinLengthValidator, RegexValidator
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
+from django.core.validators import EmailValidator, MinLengthValidator, RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-class User(models.Model):
+
+class UserManager(BaseUserManager):
+    def create_user(self, username, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError(_("The Email field must be set"))
+        email = self.normalize_email(email)
+        user = self.model(username=username, email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+
+class User(AbstractBaseUser, PermissionsMixin):
     """
     Attributes:
         user_id (int): The unique identifier for the user.
@@ -68,11 +85,13 @@ class User(models.Model):
         validators=[MinLengthValidator(2)],
     )
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'role', 'first_name', 'last_name']
+    objects = UserManager()
+
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["email", "role", "first_name", "last_name"]
 
     def save(self, *args, **kwargs):
-        if not self.pk:  # 
+        if not self.pk:
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
 
