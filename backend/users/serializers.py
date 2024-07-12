@@ -1,18 +1,9 @@
-"""
-Serializer for User Model.
-
-Includes:
-- UserSerializer: Serializes/deserializes User objects.
-"""
-
 from django.conf import settings
-from django.contrib.auth import authenticate
-from .models import User
-from backend.authen.models import JWTToken
+from django.utils import timezone
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth.hashers import check_password
-
+from .models import User
+from backend.authen.models import JWTToken
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,9 +12,6 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "password": {"write_only": True},
         }
-
-
-from django.utils import timezone
 
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -34,23 +22,25 @@ class UserLoginSerializer(serializers.Serializer):
         password = attrs.get('password')
 
         user = User.objects.filter(username=username).first()
-        if user is None or not check_password(password, user.password):
+        if user is None or not user.check_password(password):
             raise serializers.ValidationError('Invalid username or password')
+
+        # Blacklist existing tokens for the user in your custom model
+        JWTToken.objects.filter(user=user).update(is_blacklisted=True)
 
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
-        
-        # Make expires_at timezone-aware
+
         expires_at = timezone.now() + settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
 
+        # Save the new token in your custom model
         jwt_token = JWTToken.objects.create(
             user=user,
             token=access_token,
             expires_at=expires_at,
         )
 
-        # Return JSON serializable data
         return {
             'username': user.username,
             'tokens': {
@@ -59,5 +49,3 @@ class UserLoginSerializer(serializers.Serializer):
                 'expires_at': expires_at,
             }
         }
-
-

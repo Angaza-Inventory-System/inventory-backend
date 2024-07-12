@@ -17,18 +17,17 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import JWTToken
 from .serializers import AuthSerializer
 from backend.users.serializers import UserLoginSerializer
+from backend.authen.permissions import IsNotBlacklisted
 
-
-@permission_classes([IsAuthenticated])
+@permission_classes([IsNotBlacklisted, IsAuthenticated])
 class AuthListCreate(generics.ListCreateAPIView):
     queryset = JWTToken.objects.all()
     serializer_class = AuthSerializer
 
-@permission_classes([IsAuthenticated])
+@permission_classes([IsNotBlacklisted, IsAuthenticated])
 class AuthRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = JWTToken.objects.all()
     serializer_class = AuthSerializer
-
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

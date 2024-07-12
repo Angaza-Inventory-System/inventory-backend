@@ -27,8 +27,9 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Device, Donor, Warehouse
 from .pagination import CustomPagination
 from .serializers import DeviceSerializer, DonorSerializer, WarehouseSerializer
+from backend.authen.permissions import IsNotBlacklisted
 
-@permission_classes([IsAuthenticated])
+@permission_classes([IsNotBlacklisted, IsAuthenticated])
 class DeviceViewSet(viewsets.ModelViewSet):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
@@ -49,7 +50,7 @@ class DeviceViewSet(viewsets.ModelViewSet):
     ordering_fields = ["type", "make", "model", "year_of_manufacture", "status"]
     ordering = ["type"]
 
-@permission_classes([IsAuthenticated])
+@permission_classes([IsNotBlacklisted, IsAuthenticated])
 class WarehouseViewSet(viewsets.ModelViewSet):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
@@ -72,7 +73,7 @@ class WarehouseViewSet(viewsets.ModelViewSet):
     ]
     ordering = ["warehouse_number"]
 
-@permission_classes([IsAuthenticated])
+@permission_classes([IsNotBlacklisted, IsAuthenticated])
 class DonorViewSet(viewsets.ModelViewSet):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
@@ -87,32 +88,32 @@ class DonorViewSet(viewsets.ModelViewSet):
     ordering_fields = ["name", "email", "phone"]
     ordering = ["name"]
 
-@permission_classes([IsAuthenticated])
+@permission_classes([IsNotBlacklisted, IsAuthenticated])
 class DeviceListCreate(generics.ListCreateAPIView):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
 
-@permission_classes([IsAuthenticated])
+@permission_classes([IsNotBlacklisted, IsAuthenticated])
 class DeviceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
 
-@permission_classes([IsAuthenticated])
+@permission_classes([IsNotBlacklisted, IsAuthenticated])
 class WarehouseListCreate(generics.ListCreateAPIView):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
 
-@permission_classes([IsAuthenticated])
+@permission_classes([IsNotBlacklisted, IsAuthenticated])
 class WarehouseRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
 
-@permission_classes([IsAuthenticated])
+@permission_classes([IsNotBlacklisted, IsAuthenticated])
 class DonorListCreate(generics.ListCreateAPIView):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
 
-@permission_classes([IsAuthenticated])
+@permission_classes([IsNotBlacklisted, IsAuthenticated])
 class DonorRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer

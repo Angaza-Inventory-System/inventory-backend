@@ -14,18 +14,19 @@ from rest_framework.decorators import permission_classes
 from .models import User
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from backend.authen.permissions import IsNotBlacklisted
 
 @permission_classes([AllowAny])
 class UserCreate(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-@permission_classes([AllowAny])
+@permission_classes([IsNotBlacklisted, IsAuthenticated])
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-@permission_classes([IsAuthenticated])
+@permission_classes([IsNotBlacklisted, IsAuthenticated])
 class UserRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
