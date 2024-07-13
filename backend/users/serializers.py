@@ -1,3 +1,28 @@
+"""
+Serializers for User model instances and user login authentication.
+
+Serializers:
+- UserSerializer: Serializes User model instances.
+- UserLoginSerializer: Validates user login credentials and generates JWT tokens.
+
+UserSerializer Fields:
+- username (str): The username of the user.
+- password (str, write-only): The password of the user (not retrieved in responses).
+- email (str): The email address of the user.
+- role (str): The role of the user.
+- first_name (str): The first name of the user.
+- last_name (str): The last name of the user.
+
+UserLoginSerializer Fields:
+- username (str): The username provided for login.
+- password (str, write-only): The password provided for login.
+
+UserLoginSerializer Validation:
+- Validates the provided username and password against existing User records.
+- Generates new JWT tokens for authenticated users.
+- Blacklists existing tokens for the authenticated user.
+"""
+
 from django.conf import settings
 from django.utils import timezone
 from rest_framework import serializers
