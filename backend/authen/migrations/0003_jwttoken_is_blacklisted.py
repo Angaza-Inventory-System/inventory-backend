@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authen', '0002_remove_jwttoken_is_blacklisted'),
+        ("authen", "0002_remove_jwttoken_is_blacklisted"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='jwttoken',
-            name='is_blacklisted',
+            model_name="jwttoken",
+            name="is_blacklisted",
             field=models.BooleanField(default=False),
         ),
     ]

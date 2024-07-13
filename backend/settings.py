@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import os
-from pathlib import Path
 from datetime import timedelta
+from pathlib import Path
 
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -170,8 +170,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import os
-from pathlib import Path
 from datetime import timedelta
+from pathlib import Path
 
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _

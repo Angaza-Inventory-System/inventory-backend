@@ -16,7 +16,7 @@ Endpoints:
 
 from django.urls import path
 
-from .views import UserList, UserCreate, UserRetrieveUpdateDestroy
+from .views import UserCreate, UserList, UserRetrieveUpdateDestroy
 
 urlpatterns = [
     path("", UserList.as_view(), name="user-list"),
