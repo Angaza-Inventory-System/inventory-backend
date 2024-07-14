@@ -108,6 +108,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=30,
         validators=[MinLengthValidator(2)],
     )
+    permissions = models.JSONField(default=list, blank=True)
 
     objects = UserManager()
 
