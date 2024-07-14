@@ -1,6 +1,4 @@
 from django.db import models
-from django.utils import timezone
-from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class JWTToken(models.Model):
