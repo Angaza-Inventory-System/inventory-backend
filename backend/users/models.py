@@ -81,7 +81,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         help_text=_("Minimum Length: 2 Characters. Maximum length: 50 Characters."),
     )
     password_validator = RegexValidator(
-        regex="^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[A-Z]).{10,128}$",
+        regex="^(?=.*\\d)(?=.*[!@#$%^&*])(?=.*[A-Z]).{10,128}$",
         message=_(
             "Password must be at least 10 characters long and include at least one digit, one special character, and one uppercase letter."
         ),

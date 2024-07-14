@@ -64,7 +64,7 @@ class UserLoginSerializer(serializers.Serializer):
         expires_at = timezone.now() + settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"]
 
         # Save the new token in your custom model
-        jwt_token = JWTToken.objects.create(
+        JWTToken.objects.create(
             user=user,
             token=access_token,
             expires_at=expires_at,
@@ -78,3 +78,11 @@ class UserLoginSerializer(serializers.Serializer):
                 "expires_at": expires_at,
             },
         }
+
+    def update(self, instance, validated_data):
+        # Required, but not used for login
+        pass
+
+    def create(self, validated_data):
+        # Required, but not used for login
+        pass

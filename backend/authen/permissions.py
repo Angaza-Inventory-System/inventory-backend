@@ -37,11 +37,9 @@ class IsNotBlacklisted(permissions.BasePermission):
             if jwt_token.is_blacklisted:
                 print(f"Access denied for user {user.username}: Token is blacklisted.")
                 return False
-            else:
-                # Step 6: If the token is not blacklisted, grant access and log the event
-                print(
-                    f"Access granted for user {user.username}: Token is not blacklisted."
-                )
+
+            # Step 6: If the token is not blacklisted, grant access and log the event
+            print(f"Access granted for user {user.username}: Token is not blacklisted.")
         else:
             print(f"No JWTToken found for user {user.username}.")
             return False
