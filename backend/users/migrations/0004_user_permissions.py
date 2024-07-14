@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0003_user_groups_user_is_superuser_user_last_login_and_more'),
+        ("users", "0003_user_groups_user_is_superuser_user_last_login_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='permissions',
+            model_name="user",
+            name="permissions",
             field=models.JSONField(blank=True, default=list),
         ),
     ]
