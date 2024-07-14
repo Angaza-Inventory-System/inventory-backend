@@ -18,12 +18,10 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-
 ## Django Apps
 
 So far, the backend system consists of three Django apps:
 
-1. authen:
 1. authen:
 
     - Handles user authentication and authorization.
@@ -47,42 +45,50 @@ So far, the backend system consists of three Django apps:
 
     - Manages user accounts and roles.
 
-
 ## API Endpoints
 
-- `/users/`
-  - GET: Retrieve a list of all users
+-   `/users/`
 
-- `/users/register/`
-  - POST: Create a new user.
+    -   GET: Retrieve a list of all users
 
-- `/users/<int:pk>/`
-  - PUT: Update details of a specific user.
-  - DELETE: Delete a specific user.
+-   `/users/register/`
 
-- `/devices/`
-  - GET: Retrieve a list of all devices with pagination and filtering.
-  - POST: Create a new device.
+    -   POST: Create a new user.
 
-- `/devices/<uuid:pk>/`
-  - PUT: Update details of a specific device.
-  - DELETE: Delete a specific device.
+-   `/users/<int:pk>/`
 
-- `/devices/warehouses/`
-  - GET: Retrieve a list of all warehouses.
-  - POST: Create a new warehouse.
+    -   PUT: Update details of a specific user.
+    -   DELETE: Delete a specific user.
 
-- `/devices/warehouses/<int:pk>/`
-  - PUT: Update details of a specific warehouse.
-  - DELETE: Delete a specific warehouse.
+-   `/devices/`
 
-- `/devices/donors/`
-  - GET: Retrieve a list of all donors or create a new donor.
-  - POST: Create a new donor.
+    -   GET: Retrieve a list of all devices with pagination and filtering.
+    -   POST: Create a new device.
 
-- `/devices/donors/<int:pk>/`
-  - PUT: Update details of a specific donor.
-  - DELETE: Delete a specific donor.
+-   `/devices/<uuid:pk>/`
 
-- `/login/`
-  - POST: Authenticate a user and return a JWT
+    -   PUT: Update details of a specific device.
+    -   DELETE: Delete a specific device.
+
+-   `/devices/warehouses/`
+
+    -   GET: Retrieve a list of all warehouses.
+    -   POST: Create a new warehouse.
+
+-   `/devices/warehouses/<int:pk>/`
+
+    -   PUT: Update details of a specific warehouse.
+    -   DELETE: Delete a specific warehouse.
+
+-   `/devices/donors/`
+
+    -   GET: Retrieve a list of all donors or create a new donor.
+    -   POST: Create a new donor.
+
+-   `/devices/donors/<int:pk>/`
+
+    -   PUT: Update details of a specific donor.
+    -   DELETE: Delete a specific donor.
+
+-   `/login/`
+    -   POST: Authenticate a user and return a JWT
