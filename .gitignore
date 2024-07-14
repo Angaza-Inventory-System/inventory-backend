@@ -129,6 +129,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+*.dmg
 
 # Spyder project settings
 .spyderproject
