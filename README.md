@@ -24,16 +24,22 @@ python manage.py runserver
 So far, the backend system consists of three Django apps:
 
 1. authen:
+1. authen:
 
+    - Handles user authentication and authorization.
+    - Implements multi-factor authentication.
     - Handles user authentication and authorization.
     - Implements multi-factor authentication.
 
 2. devices:
 
     - Manages device metadata, including CRUD operations.
+    - Manages device metadata, including CRUD operations.
 
 3. users:
 
+    - Endpoints for permission verification.
+    - Implements role-based access control.
     - Endpoints for permission verification.
     - Implements role-based access control.
 
