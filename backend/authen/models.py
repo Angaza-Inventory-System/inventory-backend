@@ -1,6 +1,6 @@
 from django.db import models
-
-from backend.users.models import User
+from django.utils import timezone
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class JWTToken(models.Model):
@@ -17,8 +17,11 @@ class JWTToken(models.Model):
     """
 
     token_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
     token = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()
     is_blacklisted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Token ID: {self.token_id} - User: {self.user.username}"

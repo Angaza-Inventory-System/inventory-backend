@@ -10,80 +10,79 @@ pip install -r requirements.txt
 
 ## Development
 
-To start the backend system, run the following command:
+To start the backend system, run the following commands:
 
 ```bash
+python manage.py makemigrations
+python manage.py migrate
 python manage.py runserver
 ```
+
 
 ## Django Apps
 
 So far, the backend system consists of three Django apps:
 
 1. authen:
+1. authen:
 
+    - Handles user authentication and authorization.
+    - Implements multi-factor authentication.
     - Handles user authentication and authorization.
     - Implements multi-factor authentication.
 
 2. devices:
 
     - Manages device metadata, including CRUD operations.
+    - Manages device metadata, including CRUD operations.
 
 3. users:
 
     - Endpoints for permission verification.
     - Implements role-based access control.
+    - Endpoints for permission verification.
+    - Implements role-based access control.
 
 4. admin (TODO):
+
     - Manages user accounts and roles.
+
 
 ## API Endpoints
 
--   `/devices/`
+- `/users/`
+  - GET: Retrieve a list of all users
 
-    -   GET: Gets all devices
-    -   POST with body: creates a new device
+- `/users/register/`
+  - POST: Create a new user.
 
--   `/devices/warehouse/`
+- `/users/<int:pk>/`
+  - PUT: Update details of a specific user.
+  - DELETE: Delete a specific user.
 
-    -   GET: Gets all warehouses
-    -   POST with body: creates a new warehouse
+- `/devices/`
+  - GET: Retrieve a list of all devices with pagination and filtering.
+  - POST: Create a new device.
 
--   `/devices/donors/`
+- `/devices/<uuid:pk>/`
+  - PUT: Update details of a specific device.
+  - DELETE: Delete a specific device.
 
-    -   GET: Gets all donors
-    -   POST with body: creates a new donor
+- `/devices/warehouses/`
+  - GET: Retrieve a list of all warehouses.
+  - POST: Create a new warehouse.
 
--   `/users/`
+- `/devices/warehouses/<int:pk>/`
+  - PUT: Update details of a specific warehouse.
+  - DELETE: Delete a specific warehouse.
 
-    -   GET: Gets all users
-    -   POST with body: creates a new user
+- `/devices/donors/`
+  - GET: Retrieve a list of all donors or create a new donor.
+  - POST: Create a new donor.
 
--   `/auth/`
+- `/devices/donors/<int:pk>/`
+  - PUT: Update details of a specific donor.
+  - DELETE: Delete a specific donor.
 
-    -   GET: Gets all JWTs
-    -   POST with body: creates a new token
-
--   `/devices/<id>/`
-
-    -   PUT with body: updates device `<id>` with body
-    -   DELETE: deletes device `<id>`
-
--   `/devices/warehouses/<id>/`
-
-    -   PUT with body: updates warehouse `<id>` with body
-    -   DELETE: deletes warehouse `<id>`
-
--   `/devices/donors/<id>/`
-
-    -   PUT with body: updates donor `<id>` with body
-    -   DELETE: deletes donor `<id>`
-
--   `/users/<id>/`
-
-    -   PUT with body: updates user `<id>` with body
-    -   DELETE: deletes user `<id>`
-
--   `/auth/<id>/`
-    -   PUT with body: updates JWTs `<id>` with body
-    -   DELETE: deletes JWToken `<id>`
+- `/login/`
+  - POST: Authenticate a user and return a JWT

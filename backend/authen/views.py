@@ -1,25 +1,26 @@
 """
-API views for managing authentication tokens.
+API view for user authentication via login.
 
 Views:
-- AuthListCreate: API endpoint to list all authentication tokens or create a new token.
-- AuthRetrieveUpdateDestroy: API endpoint to retrieve, update, or delete an authentication token.
+- login: API endpoint to authenticate a user and return user data with a JWT token.
 
 Serializers:
-- AuthSerializer: Serializes JWTToken model data for API interactions.
+- UserLoginSerializer: Serializes user login data for authentication.
 """
 
-from rest_framework import generics
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 
-from .models import JWTToken
-from .serializers import AuthSerializer
-
-
-class AuthListCreate(generics.ListCreateAPIView):
-    queryset = JWTToken.objects.all()
-    serializer_class = AuthSerializer
+from backend.users.serializers import UserLoginSerializer
 
 
-class AuthRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = JWTToken.objects.all()
-    serializer_class = AuthSerializer
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def login(request):
+
+    serializer = UserLoginSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    response_data = serializer.validated_data
+    return Response(response_data, status=status.HTTP_200_OK)
