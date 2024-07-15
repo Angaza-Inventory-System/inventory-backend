@@ -11,13 +11,13 @@ Serializers:
 """
 
 from rest_framework import generics
-from rest_framework.decorators import permission_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-
-from backend.authen.permissions import IsNotBlacklisted
-
+from backend.authen.permissions import IsNotBlacklisted, IsSuperUser
 from .models import User
+from rest_framework.response import Response
 from .serializers import UserSerializer
+from rest_framework import status
 
 
 @permission_classes([AllowAny])
@@ -36,3 +36,16 @@ class UserList(generics.ListAPIView):
 class UserRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+@permission_classes([IsNotBlacklisted, IsSuperUser])
+class UpdateUserPermissionsView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    lookup_field = 'username'
+
+
+@permission_classes([IsNotBlacklisted, IsSuperUser])
+class UserPermissionsView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    lookup_field = 'username'

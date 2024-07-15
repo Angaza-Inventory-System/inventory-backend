@@ -27,9 +27,8 @@ from django.conf import settings
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from .validators import validate_permissions
 from backend.authen.models import JWTToken
-
 from .models import User
 
 
@@ -38,7 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = "__all__"
         extra_kwargs = {
-            "password": {"write_only": True},
+            "password": {"write_only": True}
         }
 
 
@@ -63,7 +62,6 @@ class UserLoginSerializer(serializers.Serializer):
 
         expires_at = timezone.now() + settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"]
 
-        # Save the new token in your custom model
         JWTToken.objects.create(
             user=user,
             token=access_token,

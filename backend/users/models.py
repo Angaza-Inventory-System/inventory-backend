@@ -7,6 +7,7 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django.core.validators import EmailValidator, MinLengthValidator, RegexValidator
+from .validators import validate_permissions, DEFAULT_PERMISSIONS
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -32,6 +33,30 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
+
+    def create_superuser(self, username, email, password=None, **extra_fields):
+        """
+        Create and save a superuser with the given email and password.
+
+        Args:
+            username (str): The username for the new user.
+            email (str): The email address for the new user.
+            password (str, optional): The password for the new user. Defaults to None.
+            **extra_fields: Any additional fields to be saved in the user model.
+
+        Returns:
+            User: The newly created superuser instance.
+        """
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError(_("Superuser must have is_staff=True."))
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError(_("Superuser must have is_superuser=True."))
+
+        return self.create_user(username, email, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -105,7 +130,21 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=30,
         validators=[MinLengthValidator(2)],
     )
-    permissions = models.JSONField(default=list, blank=True)
+    permissions = models.JSONField(
+        default=DEFAULT_PERMISSIONS,
+        blank=False,
+        validators=[validate_permissions],
+        encrypted=True
+    )
+    is_staff = models.BooleanField(
+        default=False,
+    )
+    is_active = models.BooleanField(
+        default=True,
+    )
+    is_superuser = models.BooleanField(
+        default=False,
+    )
 
     objects = UserManager()
 
