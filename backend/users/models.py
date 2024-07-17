@@ -10,6 +10,7 @@ from django.core.validators import EmailValidator, MinLengthValidator, RegexVali
 from .validators import validate_permissions, DEFAULT_PERMISSIONS
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from .fields import EncryptedJSONField
 
 
 class UserManager(BaseUserManager):
@@ -130,11 +131,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=30,
         validators=[MinLengthValidator(2)],
     )
+<<<<<<< Updated upstream
     permissions = models.JSONField(
         default=DEFAULT_PERMISSIONS,
         blank=False,
         validators=[validate_permissions],
         encrypted=True
+=======
+    permissions = EncryptedJSONField(
+        default=DEFAULT_PERMISSIONS,
+        blank=False,
+        validators=[validate_permissions],
+>>>>>>> Stashed changes
     )
     is_staff = models.BooleanField(
         default=False,
