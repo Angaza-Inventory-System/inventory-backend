@@ -40,6 +40,11 @@ class UserSerializer(serializers.ModelSerializer):
             "password": {"write_only": True}
         }
 
+class UserPermissionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['permissions']
+
 
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()

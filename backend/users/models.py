@@ -7,11 +7,21 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django.core.validators import EmailValidator, MinLengthValidator, RegexValidator
-from .validators import validate_permissions, DEFAULT_PERMISSIONS
+from .validators import validate_permissions
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from .fields import EncryptedJSONField
 
+DEFAULT_PERMISSIONS = {
+    'readDevices': False,
+    'createDevices': False,
+    'editDevices': False,
+    'deleteDevices': False,
+    'scanDevices': False,
+    'bulkUploadDevices': False,
+    'manageWarehouses': False,
+    'manageDonors': False,
+    'generateQRCodes': False,
+}
 
 class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
@@ -131,18 +141,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=30,
         validators=[MinLengthValidator(2)],
     )
-<<<<<<< Updated upstream
+
     permissions = models.JSONField(
         default=DEFAULT_PERMISSIONS,
         blank=False,
-        validators=[validate_permissions],
-        encrypted=True
-=======
-    permissions = EncryptedJSONField(
-        default=DEFAULT_PERMISSIONS,
-        blank=False,
-        validators=[validate_permissions],
->>>>>>> Stashed changes
     )
     is_staff = models.BooleanField(
         default=False,
@@ -159,12 +161,29 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["email", "role", "first_name", "last_name"]
 
+    def clean(self):
+        super().clean()
+        # Perform permissions validation
+        validate_permissions(self.permissions, self)
+        if self.is_superuser:
+        # If the user is a superuser, set all permissions to True
+            for key in DEFAULT_PERMISSIONS:
+                self.permissions[key] = True
+            else:
+                # If the user is not a superuser, set any undefined permissions to the default values
+                for key, default_value in DEFAULT_PERMISSIONS.items():
+                    if key not in self.permissions:
+                        self.permissions[key] = default_value
+        
+        # If the user is a superuser, set all permissions to True
+
     def save(self, *args, **kwargs):
 
         # Automatically hashes the password before saving if the instance is newly created.
 
         if not self.pk:
             self.password = make_password(self.password)
+            self.clean()
         super().save(*args, **kwargs)
 
     def __str__(self):
