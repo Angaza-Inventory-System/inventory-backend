@@ -4,4 +4,6 @@ django-cors-headers
 django-filter
 djangorestframework
 djangorestframework-simplejwt
+django-haystack
 python-dotenv
+Whoosh

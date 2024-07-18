@@ -1,0 +1,5 @@
+{{ object.name }}
+{{ object.contact_info }}
+{{ object.address }}
+{{ object.email }}
+{{ object.phone }}

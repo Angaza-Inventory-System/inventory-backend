@@ -23,7 +23,6 @@ class IsNotBlacklisted(permissions.BasePermission):
 
         # Step 2: If authentication fails or no valid token is found, log the failure
         if auth_result is None:
-            print("JWT authentication failed: No valid token found.")
             return False
 
         # Step 3: If authentication is successful, retrieve the user and token
@@ -35,13 +34,9 @@ class IsNotBlacklisted(permissions.BasePermission):
         if jwt_token:
             # Step 5: If the token is blacklisted, deny access and log the event
             if jwt_token.is_blacklisted:
-                print(f"Access denied for user {user.username}: Token is blacklisted.")
                 return False
-
             # Step 6: If the token is not blacklisted, grant access and log the event
-            print(f"Access granted for user {user.username}: Token is not blacklisted.")
         else:
-            print(f"No JWTToken found for user {user.username}.")
             return False
 
         return True

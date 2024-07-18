@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt",
+    "haystack",
 ]
 
 MIDDLEWARE = [
@@ -70,7 +71,7 @@ CORS_ALLOWED_ORIGINS = [
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        'DIRS': [os.path.join(BASE_DIR, 'backend/templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -84,6 +85,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "backend.wsgi.application"
+
+# Haystack 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    },
+}
+
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
 
 # JWT settings
 SIMPLE_JWT = {

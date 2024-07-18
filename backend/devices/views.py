@@ -23,21 +23,49 @@ Serializers:
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, viewsets
 from rest_framework.decorators import permission_classes
-
+from haystack.query import SearchQuerySet
 from backend.authen.permissions import IsNotBlacklisted
-
 from .models import Device, Donor, Warehouse
 from .pagination import CustomPagination
 from .serializers import DeviceSerializer, DonorSerializer, WarehouseSerializer
 
 
+class SearchAndLimitMixin:
+    search_fields = []
+    filterset_fields = []
+    ordering_fields = []
+    ordering = []
+
+    def search_queryset(self, queryset, search_query):
+        if search_query:
+            sqs = SearchQuerySet().models(self.queryset.model).filter(content=search_query)
+            object_ids = [result.pk for result in sqs]
+            logger.debug(f"Search Query: {search_query}, Object IDs: {object_ids}")
+            pk_field = self.queryset.model._meta.pk.name
+            queryset = queryset.filter(**{f"{pk_field}__in": object_ids})
+        return queryset
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.query_params.get('search', None)
+        limit = self.request.query_params.get('limit', None)
+
+        queryset = self.search_queryset(queryset, search_query)
+        
+        # Apply limit after all other query modifications
+        if limit:
+            queryset = queryset[:int(limit)]
+        
+        return queryset
+
 @permission_classes([IsNotBlacklisted])
-class DeviceViewSet(viewsets.ModelViewSet):
+class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Device.objects.all()
-    serializer_class = DeviceSerializer
+    serializer_class = DeviceSerializer 
     pagination_class = CustomPagination
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_fields = {
+        "device_id": ["exact"],
         "type": ["exact", "icontains"],
         "make": ["exact", "icontains"],
         "model": ["exact", "icontains"],
@@ -49,15 +77,38 @@ class DeviceViewSet(viewsets.ModelViewSet):
         "location__name": ["exact", "icontains"],
         "assigned_user__username": ["exact", "icontains"],
     }
-    ordering_fields = ["type", "make", "model", "year_of_manufacture", "status"]
+    search_fields = [
+        "type", 
+        "make", 
+        "model", 
+        "year_of_manufacture", 
+        "status", 
+        "operating_system", 
+        "physical_condition", 
+        "donor__name", 
+        "location__name", 
+        "assigned_user__username"
+    ]
+    ordering_fields = [
+        "type", 
+        "make", 
+        "model", 
+        "year_of_manufacture", 
+        "status", 
+        "operating_system", 
+        "physical_condition", 
+        "donor__name", 
+        "location__name", 
+        "assigned_user__username"
+    ]
     ordering = ["type"]
 
 
 @permission_classes([IsNotBlacklisted])
-class WarehouseViewSet(viewsets.ModelViewSet):
+class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_fields = {
         "warehouse_number": ["exact"],
         "name": ["icontains"],
@@ -66,6 +117,13 @@ class WarehouseViewSet(viewsets.ModelViewSet):
         "postal_code": ["exact"],
         "phone": ["exact"],
     }
+    search_fields = [
+        "name",
+        "country",
+        "city",
+        "postal_code",
+        "phone",
+    ]
     ordering_fields = [
         "warehouse_number",
         "name",
@@ -78,10 +136,10 @@ class WarehouseViewSet(viewsets.ModelViewSet):
 
 
 @permission_classes([IsNotBlacklisted])
-class DonorViewSet(viewsets.ModelViewSet):
+class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_fields = {
         "name": ["icontains"],
         "contact_info": ["icontains"],
@@ -89,8 +147,16 @@ class DonorViewSet(viewsets.ModelViewSet):
         "email": ["exact", "icontains"],
         "phone": ["exact"],
     }
+    search_fields = [
+        "name",
+        "contact_info",
+        "address",
+        "email",
+        "phone",
+    ]
     ordering_fields = ["name", "email", "phone"]
     ordering = ["name"]
+
 
 
 @permission_classes([IsNotBlacklisted])

@@ -206,4 +206,4 @@ class Device(models.Model):
     status = models.CharField(max_length=100)
     distributor = models.CharField(max_length=100)
     warranty_service_info = models.TextField()
-    notes = models.TextField()
+    notes = models.TextField(blank=True)
