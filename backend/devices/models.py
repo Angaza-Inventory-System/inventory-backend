@@ -171,7 +171,6 @@ class Device(models.Model):
         max_length=100,
         unique=True,
         db_index=True,
-        help_text="MAC ID of the device (unique identifier).",
     )
     year_of_manufacture = models.IntegerField()
     shipment_date = models.DateField()

@@ -14,6 +14,8 @@ class DeviceIndex(indexes.SearchIndex, indexes.Indexable):
     donor_name = indexes.CharField(model_attr='donor__name')
     location_name = indexes.CharField(model_attr='location__name')
     assigned_user_username = indexes.CharField(model_attr='assigned_user__username')
+    mac_id = indexes.CharField(model_attr='mac_id')
+    serial_number = indexes.CharField(model_attr='serial_number')
 
 
     def get_model(self):
