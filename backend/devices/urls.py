@@ -42,12 +42,20 @@ Endpoints:
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import (DeviceListCreate, DeviceRetrieveUpdateDestroy,
-                    DeviceViewSet, DonorBatchDelete, DonorListCreate,
-                    DonorRetrieveUpdateDestroy, DonorViewSet,
-                    WarehouseBatchDelete, WarehouseListCreate,
-                    WarehouseRetrieveUpdateDestroy, WarehouseViewSet,
-                    device_batch_delete)
+from .views import (
+    DeviceListCreate,
+    DeviceRetrieveUpdateDestroy,
+    DeviceViewSet,
+    DonorBatchDelete,
+    DonorListCreate,
+    DonorRetrieveUpdateDestroy,
+    DonorViewSet,
+    WarehouseBatchDelete,
+    WarehouseListCreate,
+    WarehouseRetrieveUpdateDestroy,
+    WarehouseViewSet,
+    device_batch_delete,
+)
 
 router = DefaultRouter()
 router.register(r"devices", DeviceViewSet, basename="device")
@@ -56,17 +64,26 @@ router.register(r"donors", DonorViewSet, basename="donor")
 
 urlpatterns = [
     path("", include(router.urls)),
-    
     # Device URLs
     path("devices/", DeviceListCreate.as_view(), name="device-list-create"),
-    path("devices/<uuid:pk>/", DeviceRetrieveUpdateDestroy.as_view(), name="device-detail"),
+    path(
+        "devices/<uuid:pk>/",
+        DeviceRetrieveUpdateDestroy.as_view(),
+        name="device-detail",
+    ),
     path("batch-delete/", device_batch_delete, name="device-batch-delete"),
-
     # Warehouse URLs
     path("warehouses/", WarehouseListCreate.as_view(), name="warehouse-list-create"),
-    path("warehouses/<int:pk>/", WarehouseRetrieveUpdateDestroy.as_view(), name="warehouse-detail"),
-    path("warehouses/batch-delete/", WarehouseBatchDelete.as_view(), name="warehouse-batch-delete"),
-
+    path(
+        "warehouses/<int:pk>/",
+        WarehouseRetrieveUpdateDestroy.as_view(),
+        name="warehouse-detail",
+    ),
+    path(
+        "warehouses/batch-delete/",
+        WarehouseBatchDelete.as_view(),
+        name="warehouse-batch-delete",
+    ),
     # Donor URLs
     path("donors/batch-delete/", DonorBatchDelete.as_view(), name="donor-batch-delete"),
     path("donors/", DonorListCreate.as_view(), name="donor-list-create"),
