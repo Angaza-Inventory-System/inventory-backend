@@ -46,15 +46,15 @@ from .views import (
     DeviceListCreate,
     DeviceRetrieveUpdateDestroy,
     DeviceViewSet,
+    DonorBatchDelete,
     DonorListCreate,
     DonorRetrieveUpdateDestroy,
     DonorViewSet,
+    WarehouseBatchDelete,
     WarehouseListCreate,
     WarehouseRetrieveUpdateDestroy,
     WarehouseViewSet,
-    DeviceBatchDelete,
-    WarehouseBatchDelete,
-    DonorBatchDelete,
+    device_batch_delete,
 )
 
 router = DefaultRouter()
@@ -64,17 +64,26 @@ router.register(r"donors", DonorViewSet, basename="donor")
 
 urlpatterns = [
     path("", include(router.urls)),
-    
     # Device URLs
-    path("devices/batch-delete/", DeviceBatchDelete.as_view(), name="device-batch-delete"),
+    path("batch-delete/", device_batch_delete, name="device-batch-delete"),
     path("devices/", DeviceListCreate.as_view(), name="device-list-create"),
-    path("devices/<uuid:pk>/", DeviceRetrieveUpdateDestroy.as_view(), name="device-detail"),
-
+    path(
+        "devices/<uuid:pk>/",
+        DeviceRetrieveUpdateDestroy.as_view(),
+        name="device-detail",
+    ),
     # Warehouse URLs
-    path("warehouses/batch-delete/", WarehouseBatchDelete.as_view(), name="warehouse-batch-delete"),
+    path(
+        "warehouses/batch-delete/",
+        WarehouseBatchDelete.as_view(),
+        name="warehouse-batch-delete",
+    ),
     path("warehouses/", WarehouseListCreate.as_view(), name="warehouse-list-create"),
-    path("warehouses/<int:pk>/", WarehouseRetrieveUpdateDestroy.as_view(), name="warehouse-detail"),
-
+    path(
+        "warehouses/<int:pk>/",
+        WarehouseRetrieveUpdateDestroy.as_view(),
+        name="warehouse-detail",
+    ),
     # Donor URLs
     path("donors/batch-delete/", DonorBatchDelete.as_view(), name="donor-batch-delete"),
     path("donors/", DonorListCreate.as_view(), name="donor-list-create"),
