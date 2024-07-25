@@ -3,7 +3,13 @@ from rest_framework import filters, generics, status, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
+from rest_framework import filters, generics, status, viewsets
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+
 from backend.authen.permissions import IsNotBlacklisted
+
+from .mixins import BatchCreateMixin, BatchDeleteMixin, SearchAndLimitMixin
 
 from .mixins import BatchCreateMixin, BatchDeleteMixin, SearchAndLimitMixin
 from .models import Device, Donor, Warehouse
@@ -15,7 +21,13 @@ from .serializers import DeviceSerializer, DonorSerializer, WarehouseSerializer
 class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
+    serializer_class = DeviceSerializer
     pagination_class = CustomPagination
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
     filter_backends = [
         DjangoFilterBackend,
         filters.OrderingFilter,
@@ -57,14 +69,28 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "donor__name",
         "location__name",
         "assigned_user__username",
+        "type",
+        "make",
+        "model",
+        "year_of_manufacture",
+        "status",
+        "operating_system",
+        "physical_condition",
+        "donor__name",
+        "location__name",
+        "assigned_user__username",
     ]
     ordering = ["type"]
-
 
 @permission_classes([IsNotBlacklisted])
 class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
     filter_backends = [
         DjangoFilterBackend,
         filters.OrderingFilter,
@@ -95,11 +121,15 @@ class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     ]
     ordering = ["warehouse_number"]
 
-
 @permission_classes([IsNotBlacklisted])
 class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
     filter_backends = [
         DjangoFilterBackend,
         filters.OrderingFilter,
@@ -120,30 +150,32 @@ class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "phone",
         "mac_address",
         "mac_pro",
+        "mac_pro",
     ]
     ordering_fields = ["name", "email", "phone"]
     ordering = ["name"]
 
-
 @permission_classes([IsNotBlacklisted])
-class DeviceListCreate(BatchCreateMixin):
+class DeviceListCreate(generics.ListCreateAPIView):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
-
 
 @permission_classes([IsNotBlacklisted])
 class DeviceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
 
-
 @permission_classes([IsNotBlacklisted])
+class WarehouseListCreate(generics.ListCreateAPIView):
+    queryset = Warehouse.objects.all()
 class WarehouseListCreate(BatchCreateMixin):
     def get_queryset(self):
         # Return the queryset you want to use
         return Warehouse.objects.all()
 
+
     serializer_class = WarehouseSerializer
+
 
 
 @permission_classes([IsNotBlacklisted])
@@ -151,12 +183,10 @@ class WarehouseRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
 
-
 @permission_classes([IsNotBlacklisted])
-class DonorListCreate(BatchCreateMixin):
+class DonorListCreate(generics.ListCreateAPIView):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
-
 
 @permission_classes([IsNotBlacklisted])
 class DonorRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('devices', '0004_alter_device_mac_id'),
+        ("devices", "0004_alter_device_mac_id"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='warehouse',
-            name='warehouse_number',
+            model_name="warehouse",
+            name="warehouse_number",
             field=models.IntegerField(blank=True, primary_key=True, serialize=False),
         ),
     ]
