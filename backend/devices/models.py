@@ -33,7 +33,7 @@ class Warehouse(models.Model):
                 - Must be between 1 and 20 characters in length.
     """
 
-    warehouse_number = models.IntegerField(primary_key=True)
+    warehouse_number = models.IntegerField(primary_key=True, blank=True)
     name = models.CharField(max_length=255)
     country = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
