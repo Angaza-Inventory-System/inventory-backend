@@ -36,6 +36,7 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "assigned_user__username": ["exact", "icontains"],
     }
     search_fields = [
+        "date_recieved"
         "serial_number",
         "mac_id",
         "device",
