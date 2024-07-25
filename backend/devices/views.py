@@ -9,14 +9,19 @@ from .mixins import BatchCreateMixin, BatchDeleteMixin, SearchAndLimitMixin
 from .models import Device, Donor, Warehouse
 from .pagination import CustomPagination
 from .serializers import DeviceSerializer, DonorSerializer, WarehouseSerializer
-from .mixins import SearchAndLimitMixin
 
 
 @permission_classes([IsNotBlacklisted])
 class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
+    serializer_class = DeviceSerializer
     pagination_class = CustomPagination
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
     filter_backends = [
         DjangoFilterBackend,
         filters.OrderingFilter,
@@ -36,22 +41,28 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "assigned_user__username": ["exact", "icontains"],
     }
     search_fields = [
-        "date_recieved"
-        "serial_number",
-        "mac_id",
-        "device_id",
-        "type", 
-        "make", 
-        "model", 
-        "year_of_manufacture", 
-        "status", 
-        "operating_system", 
-        "physical_condition", 
-        "donor__name", 
-        "location__name", 
-        "assigned_user__username"
+        "type",
+        "make",
+        "model",
+        "year_of_manufacture",
+        "status",
+        "operating_system",
+        "physical_condition",
+        "donor__name",
+        "location__name",
+        "assigned_user__username",
     ]
     ordering_fields = [
+        "type",
+        "make",
+        "model",
+        "year_of_manufacture",
+        "status",
+        "operating_system",
+        "physical_condition",
+        "donor__name",
+        "location__name",
+        "assigned_user__username",
         "type",
         "make",
         "model",
@@ -65,10 +76,16 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     ]
     ordering = ["type"]
 
+
 @permission_classes([IsNotBlacklisted])
 class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
     filter_backends = [
         DjangoFilterBackend,
         filters.OrderingFilter,
@@ -99,10 +116,16 @@ class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     ]
     ordering = ["warehouse_number"]
 
+
 @permission_classes([IsNotBlacklisted])
 class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
     filter_backends = [
         DjangoFilterBackend,
         filters.OrderingFilter,
@@ -123,23 +146,29 @@ class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "phone",
         "mac_address",
         "mac_pro",
+        "mac_pro",
     ]
     ordering_fields = ["name", "email", "phone"]
     ordering = ["name"]
+
 
 @permission_classes([IsNotBlacklisted])
 class DeviceListCreate(generics.ListCreateAPIView):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
 
+
 @permission_classes([IsNotBlacklisted])
 class DeviceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
 
+
 @permission_classes([IsNotBlacklisted])
 class WarehouseListCreate(generics.ListCreateAPIView):
     queryset = Warehouse.objects.all()
+
+
 class WarehouseListCreate(BatchCreateMixin):
     def get_queryset(self):
         # Return the queryset you want to use
@@ -153,10 +182,12 @@ class WarehouseRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
 
+
 @permission_classes([IsNotBlacklisted])
 class DonorListCreate(generics.ListCreateAPIView):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
+
 
 @permission_classes([IsNotBlacklisted])
 class DonorRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
@@ -177,11 +208,12 @@ class DonorBatchDelete(BatchDeleteMixin):
 
 
 @api_view(["POST"])
+@permission_classes([IsNotBlacklisted])
 def device_batch_delete(request):
     data = request.data
     device_ids = data.get("device_ids")
 
-    if device_ids is None:
+    if device_ids is None or len(device_ids) == 0:
         return Response(
             {"detail": "Request must contain a list of 'device_ids' to delete."},
             status=status.HTTP_400_BAD_REQUEST,

@@ -65,24 +65,24 @@ router.register(r"donors", DonorViewSet, basename="donor")
 urlpatterns = [
     path("", include(router.urls)),
     # Device URLs
-    path("batch-delete/", device_batch_delete, name="device-batch-delete"),
     path("devices/", DeviceListCreate.as_view(), name="device-list-create"),
     path(
         "devices/<uuid:pk>/",
         DeviceRetrieveUpdateDestroy.as_view(),
         name="device-detail",
     ),
+    path("batch-delete/", device_batch_delete, name="device-batch-delete"),
     # Warehouse URLs
-    path(
-        "warehouses/batch-delete/",
-        WarehouseBatchDelete.as_view(),
-        name="warehouse-batch-delete",
-    ),
     path("warehouses/", WarehouseListCreate.as_view(), name="warehouse-list-create"),
     path(
         "warehouses/<int:pk>/",
         WarehouseRetrieveUpdateDestroy.as_view(),
         name="warehouse-detail",
+    ),
+    path(
+        "warehouses/batch-delete/",
+        WarehouseBatchDelete.as_view(),
+        name="warehouse-batch-delete",
     ),
     # Donor URLs
     path("donors/", DonorListCreate.as_view(), name="donor-list-create"),

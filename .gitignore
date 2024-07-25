@@ -156,4 +156,4 @@ dmypy.json
 cython_debug/
 
 # Others
-woosh_index/
+whoosh_index
