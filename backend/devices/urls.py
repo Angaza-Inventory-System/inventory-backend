@@ -52,9 +52,6 @@ from .views import (
     WarehouseListCreate,
     WarehouseRetrieveUpdateDestroy,
     WarehouseViewSet,
-    DeviceBatchDelete,
-    WarehouseBatchDelete,
-    DonorBatchDelete,
 )
 
 router = DefaultRouter()
@@ -66,17 +63,14 @@ urlpatterns = [
     path("", include(router.urls)),
     
     # Device URLs
-    path("devices/batch-delete/", DeviceBatchDelete.as_view(), name="device-batch-delete"),
     path("devices/", DeviceListCreate.as_view(), name="device-list-create"),
     path("devices/<uuid:pk>/", DeviceRetrieveUpdateDestroy.as_view(), name="device-detail"),
 
     # Warehouse URLs
-    path("warehouses/batch-delete/", WarehouseBatchDelete.as_view(), name="warehouse-batch-delete"),
     path("warehouses/", WarehouseListCreate.as_view(), name="warehouse-list-create"),
     path("warehouses/<int:pk>/", WarehouseRetrieveUpdateDestroy.as_view(), name="warehouse-detail"),
 
     # Donor URLs
-    path("donors/batch-delete/", DonorBatchDelete.as_view(), name="donor-batch-delete"),
     path("donors/", DonorListCreate.as_view(), name="donor-list-create"),
     path("donors/<int:pk>/", DonorRetrieveUpdateDestroy.as_view(), name="donor-detail"),
 ]

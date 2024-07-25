@@ -5,7 +5,7 @@ from backend.authen.permissions import IsNotBlacklisted
 from .models import Device, Donor, Warehouse
 from .pagination import CustomPagination
 from .serializers import DeviceSerializer, DonorSerializer, WarehouseSerializer
-from .mixins import SearchAndLimitMixin, BatchCreateMixin, BatchDeleteMixin
+from .mixins import SearchAndLimitMixin
 
 @permission_classes([IsNotBlacklisted])
 class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
@@ -52,7 +52,6 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     ]
     ordering = ["type"]
 
-
 @permission_classes([IsNotBlacklisted])
 class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Warehouse.objects.all()
@@ -83,7 +82,6 @@ class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     ]
     ordering = ["warehouse_number"]
 
-
 @permission_classes([IsNotBlacklisted])
 class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Donor.objects.all()
@@ -108,24 +106,19 @@ class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     ordering_fields = ["name", "email", "phone"]
     ordering = ["name"]
 
-
 @permission_classes([IsNotBlacklisted])
-class DeviceListCreate(BatchCreateMixin):
+class DeviceListCreate(generics.ListCreateAPIView):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
-
 
 @permission_classes([IsNotBlacklisted])
 class DeviceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
 
-
 @permission_classes([IsNotBlacklisted])
-class WarehouseListCreate(BatchCreateMixin):
-    def get_queryset(self):
-        # Return the queryset you want to use
-        return Warehouse.objects.all()
+class WarehouseListCreate(generics.ListCreateAPIView):
+    queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
 
 @permission_classes([IsNotBlacklisted])
@@ -133,32 +126,12 @@ class WarehouseRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
 
-
 @permission_classes([IsNotBlacklisted])
-class DonorListCreate(BatchCreateMixin):
+class DonorListCreate(generics.ListCreateAPIView):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
-
 
 @permission_classes([IsNotBlacklisted])
 class DonorRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
-
-
-@permission_classes([IsNotBlacklisted])
-class DeviceBatchDelete(BatchDeleteMixin):
-    def get_queryset(self):
-        return Device.objects.all()
-
-
-@permission_classes([IsNotBlacklisted])
-class WarehouseBatchDelete(BatchDeleteMixin):
-    def get_queryset(self):
-        return Warehouse.objects.all()
-
-
-@permission_classes([IsNotBlacklisted])
-class DonorBatchDelete(BatchDeleteMixin):
-    def get_queryset(self):
-        return Donor.objects.all()
