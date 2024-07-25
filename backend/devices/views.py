@@ -36,16 +36,19 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "assigned_user__username": ["exact", "icontains"],
     }
     search_fields = [
-        "type",
-        "make",
-        "model",
-        "year_of_manufacture",
-        "status",
-        "operating_system",
-        "physical_condition",
-        "donor__name",
-        "location__name",
-        "assigned_user__username",
+        "serial_number",
+        "mac_id",
+        "device",
+        "type", 
+        "make", 
+        "model", 
+        "year_of_manufacture", 
+        "status", 
+        "operating_system", 
+        "physical_condition", 
+        "donor__name", 
+        "location__name", 
+        "assigned_user__username"
     ]
     ordering_fields = [
         "type",
