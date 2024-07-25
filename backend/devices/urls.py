@@ -85,7 +85,6 @@ urlpatterns = [
         name="warehouse-detail",
     ),
     # Donor URLs
-    path("donors/batch-delete/", DonorBatchDelete.as_view(), name="donor-batch-delete"),
     path("donors/", DonorListCreate.as_view(), name="donor-list-create"),
     path("donors/<int:pk>/", DonorRetrieveUpdateDestroy.as_view(), name="donor-detail"),
 ]
