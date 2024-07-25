@@ -39,7 +39,7 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "date_recieved"
         "serial_number",
         "mac_id",
-        "device",
+        "device_id",
         "type", 
         "make", 
         "model", 
