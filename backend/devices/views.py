@@ -45,7 +45,7 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "physical_condition": ["exact", "icontains"],
         "donor__name": ["exact", "icontains"],
         "location__name": ["exact", "icontains"],
-        "assigned_user__username": ["exact", "icontains"],
+        "created_by__username": ["exact", "icontains"],
     }
     search_fields = [
         "device_id",
@@ -60,7 +60,7 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "physical_condition",
         "donor__name",
         "location__name",
-        "assigned_user__username",
+        "created_by__username",
     ]
     ordering_fields = [
         "type",
@@ -72,7 +72,7 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "physical_condition",
         "donor__name",
         "location__name",
-        "assigned_user__username",
+        "created_by__username",
         "type",
         "make",
         "model",
@@ -82,7 +82,7 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "physical_condition",
         "donor__name",
         "location__name",
-        "assigned_user__username",
+        "created_by__username",
     ]
     ordering = ["type"]
 
@@ -344,7 +344,7 @@ def generate_mock_device(num_devices, warehouses, donors, users):
             ).date(),
             "value": round(random.uniform(100, 1000), 2),
             "location": random.choice(warehouses) if warehouses else None,
-            "assigned_user": random.choice(users) if users else None,
+            "created_by": random.choice(users) if users else None,
             "status": random.choice(["Available", "In Use", "Under Repair", "Retired"]),
             "distributor": f"Distributor {existing_devices_count + i + 1}",
             "warranty_service_info": f"Warranty info for Device {existing_devices_count + i + 1}",

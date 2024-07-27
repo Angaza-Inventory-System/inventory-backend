@@ -16,7 +16,7 @@
 {{ object.date_of_donation }}
 {{ object.value }}
 {{ object.location.name }}
-{{ object.assigned_user.username }}
+{{ object.created_by.username }}
 {{ object.status }}
 {{ object.distributor }}
 {{ object.warranty_service_info }}
