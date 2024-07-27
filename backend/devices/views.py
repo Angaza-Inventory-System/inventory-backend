@@ -1,15 +1,15 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from django.apps import apps
 from rest_framework import filters, generics, status, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-
 from backend.authen.permissions import IsNotBlacklisted
 
-from .mixins import BatchCreateMixin, BatchDeleteMixin, SearchAndLimitMixin
+from .mixins import SearchAndLimitMixin
 from .models import Device, Donor, Warehouse
 from .pagination import CustomPagination
 from .serializers import DeviceSerializer, DonorSerializer, WarehouseSerializer
-
+from .error_utils import handle_exception 
 
 @permission_classes([IsNotBlacklisted])
 class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
@@ -41,6 +41,9 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "assigned_user__username": ["exact", "icontains"],
     }
     search_fields = [
+        "device_id",
+        "serial_number",
+        "mac_id",
         "type",
         "make",
         "model",
@@ -145,8 +148,7 @@ class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "email",
         "phone",
         "mac_address",
-        "mac_pro",
-        "mac_pro",
+
     ]
     ordering_fields = ["name", "email", "phone"]
     ordering = ["name"]
@@ -167,13 +169,6 @@ class DeviceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 @permission_classes([IsNotBlacklisted])
 class WarehouseListCreate(generics.ListCreateAPIView):
     queryset = Warehouse.objects.all()
-
-
-class WarehouseListCreate(BatchCreateMixin):
-    def get_queryset(self):
-        # Return the queryset you want to use
-        return Warehouse.objects.all()
-
     serializer_class = WarehouseSerializer
 
 
@@ -194,34 +189,77 @@ class DonorRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
 
-
+@api_view(["DELETE"])
 @permission_classes([IsNotBlacklisted])
-class WarehouseBatchDelete(BatchDeleteMixin):
-    def get_queryset(self):
-        return Warehouse.objects.all()
+def batch_delete(request):
+    model_name = "devices." + request.query_params.get('model').capitalize()
+    model = get_model(model_name)
 
+    if model is None:
+        return Response(
+            {"error": "Invalid model specified."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
-@permission_classes([IsNotBlacklisted])
-class DonorBatchDelete(BatchDeleteMixin):
-    def get_queryset(self):
-        return Donor.objects.all()
+    ids = validate_ids(request.data, "ids")
+    if not ids:
+        return Response(
+            {"error": "Request must contain a list of 'ids' to delete."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
+    try:
+        model.objects.filter(pk__in=ids).delete()
+        return Response(
+            {"message": "Records deleted successfully."},
+            status=status.HTTP_204_NO_CONTENT
+        )
+    except Exception as e:
+        return handle_exception(e)
 
 @api_view(["POST"])
 @permission_classes([IsNotBlacklisted])
-def device_batch_delete(request):
-    data = request.data
-    device_ids = data.get("device_ids")
+def batch_create(request):
+    model_name = "devices." + request.query_params.get('model').capitalize()
+    model = get_model(model_name)
 
-    if device_ids is None or len(device_ids) == 0:
+    if model is None:
         return Response(
-            {"detail": "Request must contain a list of 'device_ids' to delete."},
-            status=status.HTTP_400_BAD_REQUEST,
+            {"error": f"Invalid model specified. {model_name}"},
+            status=status.HTTP_400_BAD_REQUEST
         )
 
-    devices = Device.objects.filter(pk__in=device_ids)
-    devices.delete()
+    data_list = request.data.get("objects")
+    if not data_list or not isinstance(data_list, list):
+        return Response(
+            {"error": "Request must contain a list of objects to create."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
-    return Response(
-        {"detail": "Devices deleted successfully."}, status=status.HTTP_204_NO_CONTENT
-    )
+    try:
+        for data in data_list:
+            model.objects.create(**data)
+        return Response(
+            {"message": "Records created successfully."},
+            status=status.HTTP_201_CREATED
+        )
+    except Exception as e:
+        return handle_exception(e)
+
+def validate_ids(data, id_key):
+    ids = data.get(id_key)
+    if not ids or not isinstance(ids, list):
+        return False
+    return ids
+
+def generate_response(message, status_code):
+    return Response({"detail": message}, status=status_code)
+
+def get_model(model_path):
+    try:
+        app_label, model_name = model_path.rsplit('.', 1)
+        return apps.get_model(app_label, model_name)
+    except ValueError:
+        return None
+    except LookupError:
+        return None
