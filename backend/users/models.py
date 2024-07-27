@@ -134,7 +134,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     permissions = models.JSONField(
-
         default=get_default_permissions,
         blank=False,
     )
@@ -146,24 +145,23 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["email", "role", "first_name", "last_name"]
+    REQUIRED_FIELDS = ["email", "role", "first_name", "last_name", "password"]
 
     def clean(self):
         super().clean()
         # Perform permissions validation
         validate_permissions(self.permissions, self)
         if self.is_superuser:
-        # If the user is a superuser, set all permissions to True
+            # If the user is a superuser, set all permissions to True
             for key in get_default_permissions():
                 self.permissions[key] = True
-            else:
-                # If the user is not a superuser, set any undefined permissions to the default values
-                for key, default_value in get_default_permissions().items():
-                    if key not in self.permissions:
-                        self.permissions[key] = default_value
-        
-        # If the user is a superuser, set all permissions to True
+        else:
+            # If the user is not a superuser, set any undefined permissions to the default values
+            for key, default_value in get_default_permissions().items():
+                if key not in self.permissions:
+                    self.permissions[key] = default_value
 
+        # Password validation
         password_validator = RegexValidator(
             regex="^(?=.*\\d)(?=.*[!@#$%^&*])(?=.*[A-Z]).{10,128}$",
             message=_(
@@ -176,12 +174,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             raise ValidationError({"password": e.message})
 
     def save(self, *args, **kwargs):
-
-        # Automatically hashes the password before saving if the instance is newly created.
-
+        # Automatically hashes the password before saving if the instance is newly created
         if not self.pk:
             self.password = make_password(self.password)
-            self.clean()
+        self.clean()
         super().save(*args, **kwargs)
 
     def __str__(self):

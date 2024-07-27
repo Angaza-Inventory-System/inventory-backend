@@ -60,8 +60,8 @@ class UserViewSet(viewsets.ModelViewSet):
         self.perform_destroy(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-@permission_classes([IsNotBlacklisted, IsSuperUser])
-class UpdateUserPermissionsView(viewsets.GenericViewSet, generics.UpdateAPIView):
+@permission_classes([IsNotBlacklisted])
+class UpdateUserPermissionsView(viewsets.GenericViewSet, generics.GenericAPIView):
     queryset = User.objects.all()
     serializer_class = UserPermissionsSerializer
     lookup_field = 'username'
