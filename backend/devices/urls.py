@@ -54,6 +54,7 @@ from .views import (
     WarehouseViewSet,
     batch_create,
     batch_delete,
+    generate_mock_data,
 )
 
 router = DefaultRouter()
@@ -63,23 +64,26 @@ router.register(r"donors", DonorViewSet, basename="donor")
 
 urlpatterns = [
     path("", include(router.urls)),
-
     # Device URLs
     path("devices/", DeviceListCreate.as_view(), name="device-list-create"),
-    path("devices/<uuid:pk>/", DeviceRetrieveUpdateDestroy.as_view(), name="device-detail"),
-
-
+    path(
+        "devices/<uuid:pk>/",
+        DeviceRetrieveUpdateDestroy.as_view(),
+        name="device-detail",
+    ),
     # Warehouse URLs
     path("warehouses/", WarehouseListCreate.as_view(), name="warehouse-list-create"),
-    path("warehouses/<int:pk>/", WarehouseRetrieveUpdateDestroy.as_view(), name="warehouse-detail"),
-
-
+    path(
+        "warehouses/<int:pk>/",
+        WarehouseRetrieveUpdateDestroy.as_view(),
+        name="warehouse-detail",
+    ),
     # Donor URLs
     path("donors/", DonorListCreate.as_view(), name="donor-list-create"),
     path("donors/<int:pk>/", DonorRetrieveUpdateDestroy.as_view(), name="donor-detail"),
-
-
     # Batch URLs
     path("batch-create/", batch_create, name="batch-create"),
     path("batch-delete/", batch_delete, name="batch-delete"),
+    # Mock Data Generation URL
+    path("generate-mock-data/", generate_mock_data, name="generate-mock-data"),
 ]
