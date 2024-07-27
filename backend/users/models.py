@@ -11,17 +11,18 @@ from .validators import validate_permissions
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-DEFAULT_PERMISSIONS = {
-    'readDevices': False,
-    'createDevices': False,
-    'editDevices': False,
-    'deleteDevices': False,
-    'scanDevices': False,
-    'bulkUploadDevices': False,
-    'manageWarehouses': False,
-    'manageDonors': False,
-    'generateQRCodes': False,
-}
+def get_default_permissions():
+    return {
+        "readDevices": False,
+        "createDevices": False,
+        "editDevices": False,
+        "deleteDevices": False,
+        "scanDevices": False,
+        "bulkUploadDevices": False,
+        "manageWarehouses": False,
+        "manageDonors": False,
+        "generateQRCodes": False,
+    }
 
 class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
@@ -58,12 +59,8 @@ class UserManager(BaseUserManager):
         Returns:
             User: The newly created superuser instance.
         """
-        extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError(_("Superuser must have is_staff=True."))
         if extra_fields.get('is_superuser') is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
 
@@ -143,15 +140,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     permissions = models.JSONField(
-        default=DEFAULT_PERMISSIONS,
+        
+        default=get_default_permissions,
         blank=False,
     )
-    is_staff = models.BooleanField(
-        default=False,
-    )
-    is_active = models.BooleanField(
-        default=True,
-    )
+    
     is_superuser = models.BooleanField(
         default=False,
     )
@@ -167,11 +160,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         validate_permissions(self.permissions, self)
         if self.is_superuser:
         # If the user is a superuser, set all permissions to True
-            for key in DEFAULT_PERMISSIONS:
+            for key in get_default_permissions():
                 self.permissions[key] = True
             else:
                 # If the user is not a superuser, set any undefined permissions to the default values
-                for key, default_value in DEFAULT_PERMISSIONS.items():
+                for key, default_value in get_default_permissions().items():
                     if key not in self.permissions:
                         self.permissions[key] = default_value
         
