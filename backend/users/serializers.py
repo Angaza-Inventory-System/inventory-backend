@@ -27,7 +27,6 @@ from django.conf import settings
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-from .validators import validate_permissions
 from backend.authen.models import JWTToken
 from .models import User
 
@@ -35,10 +34,23 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ['username', 'email', 'role', 'first_name', 'last_name', 'is_superuser']
         extra_kwargs = {
-            "password": {"write_only": True}
+            'password': {'write_only': True}
         }
+
+    def create(self, validated_data):
+        user = User(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            role=validated_data['role'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
 
 class UserPermissionsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -81,7 +93,7 @@ class UserLoginSerializer(serializers.Serializer):
                 "expires_at": expires_at,
             },
         }
-
+    
     def update(self, instance, validated_data):
         # Required, but not used for login
         pass

@@ -1,27 +1,13 @@
-"""
-URL patterns for managing users through APIs.
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import UserCreate, UserViewSet, UpdateUserPermissionsView
 
-Endpoints:
-    Users:
-        - {{BaseURL}}/users/:
-            - GET: Retrieve a list of all users
 
-        - {{BaseURL}}/users/register/:
-            - POST: Create a new user.
-
-        - {{BaseURL}}/users/<int:pk>/:
-            - PUT: Update details of a specific user.
-            - DELETE: Delete a specific user.
-"""
-
-from django.urls import path
-
-from .views import UserCreate, UserList, UserRetrieveUpdateDestroy, UpdateUserPermissionsView, UserPermissionsView
+router = DefaultRouter()
+router.register(r'users', UserViewSet, basename='user')
+router.register(r'user-permissions', UpdateUserPermissionsView, basename='user-permissions')
 
 urlpatterns = [
-    path("", UserList.as_view(), name="user-list"),
-    path("register/", UserCreate.as_view(), name="user-create"),
-    path("<int:pk>/", UserRetrieveUpdateDestroy.as_view(), name="user-detail"),
-    path("<str:username>/permissions/", UserPermissionsView.as_view(), name='get_user_permissions'),
-    path("<str:username>/permissions/update/", UpdateUserPermissionsView.as_view(), name='update_user_permissions'),
+    path('register/', UserCreate.as_view(), name='user-create'),
+    path('', include(router.urls)),
 ]

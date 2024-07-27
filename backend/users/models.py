@@ -6,6 +6,8 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
+
+from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator, MinLengthValidator, RegexValidator
 from .validators import validate_permissions
 from django.db import models
@@ -110,16 +112,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         validators=[MinLengthValidator(2)],
         help_text=_("Minimum Length: 2 Characters. Maximum length: 50 Characters."),
     )
-    password_validator = RegexValidator(
-        regex="^(?=.*\\d)(?=.*[!@#$%^&*])(?=.*[A-Z]).{10,128}$",
-        message=_(
-            "Password must be at least 10 characters long and include at least one digit, one special character, and one uppercase letter."
-        ),
-    )
     password = models.CharField(
         max_length=128,
-        validators=[password_validator],
-        help_text=_("Minimum Length: 10 Characters. Maximum Length: 128 Characters."),
     )
     email = models.EmailField(
         unique=True,
@@ -140,7 +134,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     permissions = models.JSONField(
-        
+
         default=get_default_permissions,
         blank=False,
     )
@@ -169,6 +163,17 @@ class User(AbstractBaseUser, PermissionsMixin):
                         self.permissions[key] = default_value
         
         # If the user is a superuser, set all permissions to True
+
+        password_validator = RegexValidator(
+            regex="^(?=.*\\d)(?=.*[!@#$%^&*])(?=.*[A-Z]).{10,128}$",
+            message=_(
+                "Password must be at least 10 characters long and include at least one digit, one special character, and one uppercase letter."
+            ),
+        )
+        try:
+            password_validator(self.password)
+        except ValidationError as e:
+            raise ValidationError({"password": e.message})
 
     def save(self, *args, **kwargs):
 
