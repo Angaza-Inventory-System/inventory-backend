@@ -69,10 +69,9 @@ class UpdateUserPermissionsView(viewsets.GenericViewSet, generics.GenericAPIView
     queryset = User.objects.all()
     serializer_class = UserPermissionsSerializer
     lookup_field = "username"
-    permission_classes = [IsNotBlacklisted]
+    permission_classes = [IsSuperUser]
 
     @action(detail=True, methods=["patch"])
-    @permission_required("editUserPermissions")
     def update_permissions(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
@@ -82,7 +81,6 @@ class UpdateUserPermissionsView(viewsets.GenericViewSet, generics.GenericAPIView
         return Response(serializer.errors, status=400)
 
     @action(detail=True, methods=["get"])
-    @permission_required("readUserPermissions")
     def retrieve_permissions(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
