@@ -8,18 +8,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('devices', '0005_alter_warehouse_warehouse_number'),
+        ("devices", "0005_alter_warehouse_warehouse_number"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='device',
-            name='assigned_user',
+            model_name="device",
+            name="assigned_user",
         ),
         migrations.AddField(
-            model_name='device',
-            name='created_by',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='created_devices', to=settings.AUTH_USER_MODEL),
+            model_name="device",
+            name="created_by",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="created_devices",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

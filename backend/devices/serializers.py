@@ -16,7 +16,7 @@ class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
         fields = "__all__"
-        read_only_fields = ['device_id']
+        read_only_fields = ["device_id"]
 
 
 class WarehouseSerializer(serializers.ModelSerializer):

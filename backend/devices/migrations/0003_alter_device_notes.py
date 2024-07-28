@@ -6,13 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('devices', '0002_alter_device_accessories_alter_device_assigned_user_and_more'),
+        (
+            "devices",
+            "0002_alter_device_accessories_alter_device_assigned_user_and_more",
+        ),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='device',
-            name='notes',
+            model_name="device",
+            name="notes",
             field=models.TextField(blank=True),
         ),
     ]
