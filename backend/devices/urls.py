@@ -3,7 +3,7 @@ URL patterns for managing devices, warehouses, and donors through APIs.
 
 Endpoints:
 - Devices:
-    - {{BaseURL}/devices/:
+    - {{BaseURL}}/devices/:
         - GET: Retrieve a list of all devices with pagination and filtering.
         - POST: Create a new device.
 
@@ -11,23 +11,32 @@ Endpoints:
         - PUT: Update details of a specific device.
         - DELETE: Delete a specific device.
 
+    - {{BaseURL}}/devices/batch-delete/:
+        - DELETE: Delete multiple devices at once.
+
 - Warehouses:
-    - {{BaseURL}}/devices/warehouses/:
+    - {{BaseURL}}/warehouses/:
         - GET: Retrieve a list of all warehouses.
         - POST: Create a new warehouse.
 
-    - {{BaseURL}}/devices/warehouses/<int:pk>/:
+    - {{BaseURL}}/warehouses/<int:pk>/:
         - PUT: Update details of a specific warehouse.
         - DELETE: Delete a specific warehouse.
 
+    - {{BaseURL}}/warehouses/batch-delete/:
+        - DELETE: Delete multiple warehouses at once.
+
 - Donors:
-    - {{BaseURL}}/devices/donors/:
+    - {{BaseURL}}/donors/:
         - GET: Retrieve a list of all donors or create a new donor.
         - POST: Create a new donor.
 
-    - {{BaseURL}}/devices/donors/<int:pk>/:
+    - {{BaseURL}}/donors/<int:pk>/:
         - PUT: Update details of a specific donor.
         - DELETE: Delete a specific donor.
+
+    - {{BaseURL}}/donors/batch-delete/:
+        - DELETE: Delete multiple donors at once.
 """
 
 from django.urls import include, path
@@ -43,6 +52,9 @@ from .views import (
     WarehouseListCreate,
     WarehouseRetrieveUpdateDestroy,
     WarehouseViewSet,
+    batch_create,
+    batch_delete,
+    generate_mock_data,
 )
 
 router = DefaultRouter()
@@ -52,14 +64,26 @@ router.register(r"donors", DonorViewSet, basename="donor")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("", DeviceListCreate.as_view(), name="device-list-create"),
-    path("<uuid:pk>/", DeviceRetrieveUpdateDestroy.as_view(), name="device-detail"),
+    # Device URLs
+    path("devices/", DeviceListCreate.as_view(), name="device-list-create"),
+    path(
+        "devices/<uuid:pk>/",
+        DeviceRetrieveUpdateDestroy.as_view(),
+        name="device-detail",
+    ),
+    # Warehouse URLs
     path("warehouses/", WarehouseListCreate.as_view(), name="warehouse-list-create"),
     path(
         "warehouses/<int:pk>/",
         WarehouseRetrieveUpdateDestroy.as_view(),
         name="warehouse-detail",
     ),
+    # Donor URLs
     path("donors/", DonorListCreate.as_view(), name="donor-list-create"),
     path("donors/<int:pk>/", DonorRetrieveUpdateDestroy.as_view(), name="donor-detail"),
+    # Batch URLs
+    path("batch-create/", batch_create, name="batch-create"),
+    path("batch-delete/", batch_delete, name="batch-delete"),
+    # Mock Data Generation URL
+    path("generate-mock-data/", generate_mock_data, name="generate-mock-data"),
 ]
