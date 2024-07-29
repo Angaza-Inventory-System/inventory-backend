@@ -6,12 +6,13 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
-
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator, MinLengthValidator, RegexValidator
-from .validators import validate_permissions
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from .validators import validate_permissions
+
 
 def get_default_permissions():
     return {
@@ -25,6 +26,7 @@ def get_default_permissions():
         "manageDonors": False,
         "generateQRCodes": False,
     }
+
 
 class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
@@ -61,9 +63,9 @@ class UserManager(BaseUserManager):
         Returns:
             User: The newly created superuser instance.
         """
-        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault("is_superuser", True)
 
-        if extra_fields.get('is_superuser') is not True:
+        if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
 
         return self.create_user(username, email, password, **extra_fields)
@@ -137,7 +139,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=get_default_permissions,
         blank=False,
     )
-    
+
     is_superuser = models.BooleanField(
         default=False,
     )

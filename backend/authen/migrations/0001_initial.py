@@ -7,18 +7,17 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='JWTToken',
+            name="JWTToken",
             fields=[
-                ('token_id', models.AutoField(primary_key=True, serialize=False)),
-                ('token', models.TextField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('expires_at', models.DateTimeField()),
-                ('is_blacklisted', models.BooleanField(default=False)),
+                ("token_id", models.AutoField(primary_key=True, serialize=False)),
+                ("token", models.TextField()),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("expires_at", models.DateTimeField()),
+                ("is_blacklisted", models.BooleanField(default=False)),
             ],
         ),
     ]
