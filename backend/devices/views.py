@@ -1,7 +1,9 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, status, viewsets
-from rest_framework.decorators import action, permission_classes
+from rest_framework import filters, viewsets, status
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import permission_classes
+
+from django_filters.rest_framework import DjangoFilterBackend
 
 from backend.authen.permissions import IsNotBlacklisted
 from backend.users.decorators import permission_required
@@ -32,24 +34,24 @@ class DeviceViewSet(viewsets.ModelViewSet):
     ordering_fields = ["type", "make", "model", "year_of_manufacture", "status"]
     ordering = ["type"]
 
-    @action(detail=False, methods=["get"])
-    @permission_required(["readDevices"])
-    def custom_list(self, request, *args, **kwargs):
+    @permission_required(['readDevices'])
+    def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-    @action(detail=False, methods=["post"])
-    @permission_required(["createDevices"])
-    def custom_create(self, request, *args, **kwargs):
+    @permission_required(['createDevices'])
+    def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
-    @action(detail=True, methods=["put", "patch"])
-    @permission_required(["editDevices"])
-    def custom_update(self, request, *args, **kwargs):
+    @permission_required(['editDevices'])
+    def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 
-    @action(detail=True, methods=["delete"])
-    @permission_required(["deleteDevices"])
-    def custom_destroy(self, request, *args, **kwargs):
+    @permission_required(['editDevices'])
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    @permission_required(['deleteDevices'])
+    def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         self.perform_destroy(instance)
@@ -79,24 +81,24 @@ class WarehouseViewSet(viewsets.ModelViewSet):
     ]
     ordering = ["warehouse_number"]
 
-    @action(detail=False, methods=["get"])
-    @permission_required(["manageWarehouses"])
-    def custom_list(self, request, *args, **kwargs):
+    @permission_required(['manageWarehouses'])
+    def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-    @action(detail=False, methods=["post"])
-    @permission_required(["manageWarehouses"])
-    def custom_create(self, request, *args, **kwargs):
+    @permission_required(['manageWarehouses'])
+    def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
-    @action(detail=True, methods=["put", "patch"])
-    @permission_required(["manageWarehouses"])
-    def custom_update(self, request, *args, **kwargs):
+    @permission_required(['manageWarehouses'])
+    def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 
-    @action(detail=True, methods=["delete"])
-    @permission_required(["manageWarehouses"])
-    def custom_destroy(self, request, *args, **kwargs):
+    @permission_required(['manageWarehouses'])
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    @permission_required(['manageWarehouses'])
+    def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         self.perform_destroy(instance)
@@ -118,24 +120,24 @@ class DonorViewSet(viewsets.ModelViewSet):
     ordering_fields = ["name", "email", "phone"]
     ordering = ["name"]
 
-    @action(detail=False, methods=["get"])
-    @permission_required(["manageDonors"])
-    def custom_list(self, request, *args, **kwargs):
+    @permission_required(['manageDonors'])
+    def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-    @action(detail=False, methods=["post"])
-    @permission_required(["manageDonors"])
-    def custom_create(self, request, *args, **kwargs):
+    @permission_required(['manageDonors'])
+    def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
-    @action(detail=True, methods=["put", "patch"])
-    @permission_required(["manageDonors"])
-    def custom_update(self, request, *args, **kwargs):
+    @permission_required(['manageDonors'])
+    def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 
-    @action(detail=True, methods=["delete"])
-    @permission_required(["manageDonors"])
-    def custom_destroy(self, request, *args, **kwargs):
+    @permission_required(['manageDonors'])
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    @permission_required(['manageDonors'])
+    def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         self.perform_destroy(instance)
