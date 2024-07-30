@@ -1,9 +1,8 @@
-from rest_framework import filters, viewsets, status
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from rest_framework.decorators import permission_classes
-
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, status, viewsets
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 
 from backend.authen.permissions import IsNotBlacklisted
 from backend.users.decorators import permission_required
@@ -34,23 +33,23 @@ class DeviceViewSet(viewsets.ModelViewSet):
     ordering_fields = ["type", "make", "model", "year_of_manufacture", "status"]
     ordering = ["type"]
 
-    @permission_required(['readDevices'])
+    @permission_required(["readDevices"])
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-    @permission_required(['createDevices'])
+    @permission_required(["createDevices"])
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
-    @permission_required(['editDevices'])
+    @permission_required(["editDevices"])
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 
-    @permission_required(['editDevices'])
+    @permission_required(["editDevices"])
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
 
-    @permission_required(['deleteDevices'])
+    @permission_required(["deleteDevices"])
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
@@ -81,23 +80,23 @@ class WarehouseViewSet(viewsets.ModelViewSet):
     ]
     ordering = ["warehouse_number"]
 
-    @permission_required(['manageWarehouses'])
+    @permission_required(["manageWarehouses"])
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-    @permission_required(['manageWarehouses'])
+    @permission_required(["manageWarehouses"])
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
-    @permission_required(['manageWarehouses'])
+    @permission_required(["manageWarehouses"])
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 
-    @permission_required(['manageWarehouses'])
+    @permission_required(["manageWarehouses"])
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
 
-    @permission_required(['manageWarehouses'])
+    @permission_required(["manageWarehouses"])
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
@@ -120,23 +119,23 @@ class DonorViewSet(viewsets.ModelViewSet):
     ordering_fields = ["name", "email", "phone"]
     ordering = ["name"]
 
-    @permission_required(['manageDonors'])
+    @permission_required(["manageDonors"])
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-    @permission_required(['manageDonors'])
+    @permission_required(["manageDonors"])
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
-    @permission_required(['manageDonors'])
+    @permission_required(["manageDonors"])
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 
-    @permission_required(['manageDonors'])
+    @permission_required(["manageDonors"])
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
 
-    @permission_required(['manageDonors'])
+    @permission_required(["manageDonors"])
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
