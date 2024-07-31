@@ -30,7 +30,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY", default="")
 DEBUG = os.getenv("ENV") != "prod"
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+]
+
+print(f"Environment: {os.getenv('ENV')}")
+print(f"Debug: {DEBUG}")
 
 # Application definition
 INSTALLED_APPS = [
