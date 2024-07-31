@@ -139,7 +139,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def clean(self):
         super().clean()
         # Perform permissions validation
-        validate_permissions(self.permissions, self)
+        validate_permissions(self.permissions)
 
         if self.is_superuser:
             self.permissions = getAllPermissions()

@@ -1,6 +1,5 @@
 from django.core.exceptions import ValidationError
 
-from .validators import validate_permissions
 
 
 def getDefaultPermissions():
@@ -22,14 +21,7 @@ def getAllPermissions():
 
 
 def getValidPermissions(request_data, existing_permissions=None):
-    permissions = request_data.get("permissions", [])
-    if not isinstance(permissions, list):
-        raise ValidationError("Permissions must be a list.")
-
-    if existing_permissions is not None:
-        validate_permissions(permissions, existing_permissions)
-    else:
-        validate_permissions(permissions)
+    permissions = request_data.get("permissions")
 
 
 def updatePermissions(instance, new_permissions, operation="add"):

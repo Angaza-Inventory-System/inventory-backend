@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from backend.authen.permissions import IsNotBlacklisted
+from backend.authen.permissions import IsBlacklisted
 from backend.users.decorators import permission_required
 
 from .error_utils import handle_exception
@@ -20,7 +20,7 @@ from .pagination import CustomPagination
 from .serializers import DeviceSerializer, DonorSerializer, WarehouseSerializer
 
 
-@permission_classes([IsNotBlacklisted])
+@permission_classes([IsBlacklisted])
 class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
@@ -112,7 +112,7 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@permission_classes([IsNotBlacklisted])
+@permission_classes([IsBlacklisted])
 class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
@@ -175,7 +175,7 @@ class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@permission_classes([IsNotBlacklisted])
+@permission_classes([IsBlacklisted])
 class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
@@ -232,7 +232,7 @@ class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
 
 
 @api_view(["DELETE"])
-@permission_classes([IsNotBlacklisted])
+@permission_classes([IsBlacklisted])
 def batch_delete(request):
     model_name = "devices." + request.query_params.get("model").capitalize()
     model = get_model(model_name)
@@ -260,7 +260,7 @@ def batch_delete(request):
 
 
 @api_view(["POST"])
-@permission_classes([IsNotBlacklisted])
+@permission_classes([IsBlacklisted])
 def batch_create(request):
     model_name = "devices." + request.query_params.get("model").capitalize()
     model = get_model(model_name)

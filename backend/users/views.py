@@ -4,11 +4,11 @@ from rest_framework import filters, generics, status, viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-
-from backend.authen.permissions import IsNotBlacklisted, IsSuperUser
+from backend.authen.permissions import IsBlacklisted, IsSuperUser
 from backend.devices.pagination import CustomPagination
 from backend.users.decorators import permission_required
-
+from django.utils.decorators import method_decorator
+from .models import User
 from .helpers import getValidPermissions, updatePermissions
 from .models import User
 from .serializers import UserPermissionsSerializer, UserSerializer
@@ -20,7 +20,7 @@ class UserCreate(generics.CreateAPIView):
     serializer_class = UserSerializer
 
 
-@permission_classes([IsNotBlacklisted])
+@permission_classes([IsBlacklisted])
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -36,36 +36,42 @@ class UserViewSet(viewsets.ModelViewSet):
     ordering_fields = ["username", "email", "first_name", "last_name"]
     ordering = ["username"]
 
-    @permission_required("readUsers")
+
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-    @permission_required("createUsers")
+
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
-    @permission_required("editUsers")
+
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 
-    @permission_required("editUsers")
+
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
 
-    @permission_required("deleteUsers")
+
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
 
 
-@permission_classes([IsNotBlacklisted])
-class UpdateUserPermissionsView(viewsets.GenericViewSet, generics.GenericAPIView):
+@permission_classes([IsBlacklisted])
+class UserPermissionsViewSet(viewsets.GenericViewSet):
+    """
+    A viewset for managing user permissions.
+    """
     queryset = User.objects.all()
     serializer_class = UserPermissionsSerializer
     lookup_field = "username"
 
-    @permission_required("editUsers")
-    @action(detail=True, methods=["patch"])
-    def add_permissions(self, request, *args, **kwargs):
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        return Response({"permissions": instance.permissions}, status=status.HTTP_200_OK)
+
+
+    def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()
         try:
             new_permissions = getValidPermissions(
@@ -78,10 +84,9 @@ class UpdateUserPermissionsView(viewsets.GenericViewSet, generics.GenericAPIView
         except ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    @permission_required("editUsers")
-    @action(detail=True, methods=["put"])
-    def replace_permissions(self, request, *args, **kwargs):
-        instance = self.get_object()
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()      
         try:
             new_permissions = getValidPermissions(request.data)
             updatePermissions(instance, new_permissions, operation="replace")
@@ -91,9 +96,8 @@ class UpdateUserPermissionsView(viewsets.GenericViewSet, generics.GenericAPIView
         except ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    @permission_required("editUsers")
-    @action(detail=True, methods=["delete"])
-    def remove_permissions(self, request, *args, **kwargs):
+
+    def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         try:
             permissions_to_remove = getValidPermissions(
@@ -106,8 +110,8 @@ class UpdateUserPermissionsView(viewsets.GenericViewSet, generics.GenericAPIView
         except ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    @permission_required("editUsers")
-    @action(detail=True, methods=["delete"])
+
+    @action(detail=True, methods=['delete'])
     def delete_all_permissions(self, request, *args, **kwargs):
         instance = self.get_object()
         try:

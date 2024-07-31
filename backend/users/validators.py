@@ -8,8 +8,18 @@ def validate_permissions(value):
     """
     Validate that permissions is a list and only contains valid permissions.
     """
-    all_permissions = set(getAllPermissions())
-
+    all_permissions = set([
+        "readDevices", 
+        "createDevices",
+        "editDevices",
+        "deleteDevices",
+        "scanDevices",
+        "bulkUploadDevices",
+        "manageWarehouses",
+        "manageDonors",
+        "generateQRCodes"
+        ])
+    
     if not isinstance(value, list):
         raise ValidationError(_("Permissions must be a list."))
 
