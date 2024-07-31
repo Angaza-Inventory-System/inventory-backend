@@ -5,15 +5,22 @@ from .views import UpdateUserPermissionsView, UserCreate, UserViewSet
 
 router = DefaultRouter()
 router.register(r"users", UserViewSet, basename="user")
-router.register(r"user-permissions", UpdateUserPermissionsView, basename="user-permissions")
+router.register(
+    r"user-permissions", UpdateUserPermissionsView, basename="user-permissions"
+)
 
 urlpatterns = [
-    path("", include(router.urls)), 
+    path("", include(router.urls)),
     path("register/", UserCreate.as_view(), name="user-create"),
     path(
         "user-permissions/<str:username>/",
         UpdateUserPermissionsView.as_view(
-            {"get": "get", "put": "replace_permissions", "patch": "add_permissions", "delete": "remove_permissions"}
+            {
+                "get": "get",
+                "put": "replace_permissions",
+                "patch": "add_permissions",
+                "delete": "remove_permissions",
+            }
         ),
         name="user-permissions-detail",
     ),

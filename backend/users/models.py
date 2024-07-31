@@ -11,8 +11,9 @@ from django.core.validators import EmailValidator, MinLengthValidator, RegexVali
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from .helpers import getAllPermissions, getDefaultPermissions
 from .validators import validate_permissions
-from .helpers import getDefaultPermissions, getAllPermissions
+
 
 class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
