@@ -1,14 +1,15 @@
 from django.core.exceptions import ValidationError
+from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, status, viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+
 from backend.authen.permissions import IsBlacklisted, IsSuperUser
 from backend.devices.pagination import CustomPagination
 from backend.users.decorators import permission_required
-from django.utils.decorators import method_decorator
-from .models import User
+
 from .helpers import getValidPermissions, updatePermissions
 from .models import User
 from .serializers import UserPermissionsSerializer, UserSerializer
@@ -36,22 +37,17 @@ class UserViewSet(viewsets.ModelViewSet):
     ordering_fields = ["username", "email", "first_name", "last_name"]
     ordering = ["username"]
 
-
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
-
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
-
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 
-
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
-
 
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
@@ -62,14 +58,16 @@ class UserPermissionsViewSet(viewsets.GenericViewSet):
     """
     A viewset for managing user permissions.
     """
+
     queryset = User.objects.all()
     serializer_class = UserPermissionsSerializer
     lookup_field = "username"
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        return Response({"permissions": instance.permissions}, status=status.HTTP_200_OK)
-
+        return Response(
+            {"permissions": instance.permissions}, status=status.HTTP_200_OK
+        )
 
     def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -84,9 +82,8 @@ class UserPermissionsViewSet(viewsets.GenericViewSet):
         except ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
     def update(self, request, *args, **kwargs):
-        instance = self.get_object()      
+        instance = self.get_object()
         try:
             new_permissions = getValidPermissions(request.data)
             updatePermissions(instance, new_permissions, operation="replace")
@@ -95,7 +92,6 @@ class UserPermissionsViewSet(viewsets.GenericViewSet):
             )
         except ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -110,8 +106,7 @@ class UserPermissionsViewSet(viewsets.GenericViewSet):
         except ValidationError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
-    @action(detail=True, methods=['delete'])
+    @action(detail=True, methods=["delete"])
     def delete_all_permissions(self, request, *args, **kwargs):
         instance = self.get_object()
         try:

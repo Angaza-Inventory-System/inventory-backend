@@ -10,29 +10,49 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('devices', '0001_initial'),
+        ("devices", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='device',
-            name='created_by',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='created_devices', to=settings.AUTH_USER_MODEL),
+            model_name="device",
+            name="created_by",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="created_devices",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='device',
-            name='received_by',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='received_devices', to=settings.AUTH_USER_MODEL),
+            model_name="device",
+            name="received_by",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="received_devices",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='device',
-            name='donor',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='donated_devices', to='devices.donor'),
+            model_name="device",
+            name="donor",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="donated_devices",
+                to="devices.donor",
+            ),
         ),
         migrations.AddField(
-            model_name='device',
-            name='location',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='stored_items', to='devices.warehouse'),
+            model_name="device",
+            name="location",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="stored_items",
+                to="devices.warehouse",
+            ),
         ),
     ]
