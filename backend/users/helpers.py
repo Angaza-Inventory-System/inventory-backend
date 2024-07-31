@@ -19,9 +19,10 @@ def getAllPermissions():
     ]
 
 
-def getValidPermissions(request_data, existing_permissions=None):
+def getValidPermissions(request_data):
     permissions = request_data.get("permissions")
-
+    return permissions
+ 
 
 def updatePermissions(instance, new_permissions, operation="add"):
     if operation == "add":

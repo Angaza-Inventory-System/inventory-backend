@@ -72,9 +72,7 @@ class UserPermissionsViewSet(viewsets.GenericViewSet):
     def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()
         try:
-            new_permissions = getValidPermissions(
-                request.data, existing_permissions=instance.permissions
-            )
+            new_permissions = getValidPermissions(request.data)
             updatePermissions(instance, new_permissions, operation="add")
             return Response(
                 {"permissions": instance.permissions}, status=status.HTTP_200_OK
@@ -85,7 +83,9 @@ class UserPermissionsViewSet(viewsets.GenericViewSet):
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         try:
+            print(request.data)
             new_permissions = getValidPermissions(request.data)
+            print(new_permissions)
             updatePermissions(instance, new_permissions, operation="replace")
             return Response(
                 {"permissions": instance.permissions}, status=status.HTTP_200_OK
@@ -96,9 +96,7 @@ class UserPermissionsViewSet(viewsets.GenericViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         try:
-            permissions_to_remove = getValidPermissions(
-                request.data, existing_permissions=instance.permissions
-            )
+            permissions_to_remove = getValidPermissions(request.data)
             updatePermissions(instance, permissions_to_remove, operation="remove")
             return Response(
                 {"permissions": instance.permissions}, status=status.HTTP_200_OK
