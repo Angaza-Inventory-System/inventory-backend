@@ -1,7 +1,14 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import DeviceViewSet, DonorViewSet, WarehouseViewSet, batch_create, batch_delete, generate_mock_data,
+from .views import (
+    DeviceViewSet,
+    DonorViewSet,
+    WarehouseViewSet,
+    batch_create,
+    batch_delete,
+    generate_mock_data,
+)
 
 router = DefaultRouter()
 router.register(r"devices", DeviceViewSet, basename="device")
