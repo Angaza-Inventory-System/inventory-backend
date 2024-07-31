@@ -12,21 +12,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from .validators import validate_permissions
-
-
-def get_default_permissions():
-    return {
-        "readDevices": False,
-        "createDevices": False,
-        "editDevices": False,
-        "deleteDevices": False,
-        "scanDevices": False,
-        "bulkUploadDevices": False,
-        "manageWarehouses": False,
-        "manageDonors": False,
-        "generateQRCodes": False,
-    }
-
+from .helpers import getDefaultPermissions, getAllPermissions
 
 class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
@@ -136,7 +122,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     permissions = models.JSONField(
-        default=get_default_permissions,
+        default=getDefaultPermissions(),
         blank=False,
     )
 
@@ -153,15 +139,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         super().clean()
         # Perform permissions validation
         validate_permissions(self.permissions, self)
+
         if self.is_superuser:
-            # If the user is a superuser, set all permissions to True
-            for key in get_default_permissions():
-                self.permissions[key] = True
-        else:
-            # If the user is not a superuser, set any undefined permissions to the default values
-            for key, default_value in get_default_permissions().items():
-                if key not in self.permissions:
-                    self.permissions[key] = default_value
+            self.permissions = getAllPermissions()
 
         # Password validation
         password_validator = RegexValidator(
@@ -176,7 +156,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             raise ValidationError({"password": e.message})
 
     def save(self, *args, **kwargs):
-        # Automatically hashes the password before saving if the instance is newly created
         if not self.pk:
             self.password = make_password(self.password)
         self.clean()

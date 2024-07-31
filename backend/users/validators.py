@@ -1,28 +1,20 @@
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+from .helpers import getAllPermissions
 
+def validate_permissions(value):
+    """
+    Validate that permissions is a list and only contains valid permissions.
+    """
+    all_permissions = set(getAllPermissions())
+    
+    if not isinstance(value, list):
+        raise ValidationError(_('Permissions must be a list.'))
 
-def validate_permissions(value, user):
-    expected_keys = {
-        "readDevices": bool,
-        "createDevices": bool,
-        "editDevices": bool,
-        "deleteDevices": bool,
-        "scanDevices": bool,
-        "bulkUploadDevices": bool,
-        "manageWarehouses": bool,
-        "manageDonors": bool,
-        "generateQRCodes": bool,
-    }
-
-    if not isinstance(value, dict):
-        raise ValidationError("Permissions must be a dictionary.")
-
-    for key, expected_type in expected_keys.items():
-        if not isinstance(value[key], expected_type):
-            raise ValidationError(
-                f"Key '{key}' must be of type {expected_type.__name__}."
-            )
-
-    for key in value:
-        if key not in expected_keys:
-            raise ValidationError(f"Unexpected key: {key}")
+    invalid_permissions = [perm for perm in value if perm not in all_permissions]
+    
+    if invalid_permissions:
+        raise ValidationError(_('Invalid permissions: %s') % ', '.join(invalid_permissions))
+    
+    if len(value) != len(set(value)):
+        raise ValidationError(_('Permissions list must not contain duplicates.'))
