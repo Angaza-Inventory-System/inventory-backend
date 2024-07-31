@@ -86,6 +86,7 @@ class UserLoginSerializer(serializers.Serializer):
 
         return {
             "username": user.username,
+            "user_id": user.id,
             "tokens": {
                 "access_token": access_token,
                 "refresh_token": refresh_token,

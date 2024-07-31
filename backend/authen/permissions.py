@@ -35,7 +35,6 @@ class IsNotBlacklisted(permissions.BasePermission):
             # Step 5: If the token is blacklisted, deny access and log the event
             if jwt_token.is_blacklisted:
                 return False
-
             # Step 6: If the token is not blacklisted, grant access and log the event
         else:
             return False

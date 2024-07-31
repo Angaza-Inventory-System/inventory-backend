@@ -33,7 +33,7 @@ class Warehouse(models.Model):
                 - Must be between 1 and 20 characters in length.
     """
 
-    warehouse_number = models.IntegerField(primary_key=True)
+    warehouse_number = models.IntegerField(primary_key=True, blank=True)
     name = models.CharField(max_length=255)
     country = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
@@ -140,7 +140,7 @@ class Device(models.Model):
         location (ForeignKey): The location of the device in the warehouse.
             - Constraints:
                 - Must be a foreign key to the Warehouse model (ForeignKey).
-        assigned_user (ForeignKey): The user to whom the device is assigned.
+        created_by (ForeignKey): The user to whom the device is assigned.
             - Constraints:
                 - Must be a foreign key to the User model (ForeignKey).
         status (CharField): The status of the device.
@@ -171,11 +171,17 @@ class Device(models.Model):
         max_length=100,
         unique=True,
         db_index=True,
-        help_text="MAC ID of the device (unique identifier).",
     )
     year_of_manufacture = models.IntegerField()
     shipment_date = models.DateField()
     date_received = models.DateField()
+
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="created_devices",
+    )
     received_by = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -197,13 +203,7 @@ class Device(models.Model):
     location = models.ForeignKey(
         Warehouse, on_delete=models.SET_NULL, null=True, related_name="stored_items"
     )
-    assigned_user = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="assigned_devices",
-    )
     status = models.CharField(max_length=100)
     distributor = models.CharField(max_length=100)
     warranty_service_info = models.TextField()
-    notes = models.TextField()
+    notes = models.TextField(blank=True)

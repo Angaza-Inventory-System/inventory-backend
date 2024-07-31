@@ -1,0 +1,6 @@
+{{ object.warehouse_number }}
+{{ object.name }}
+{{ object.country }}
+{{ object.city }}
+{{ object.postal_code }}
+{{ object.phone }}

@@ -2,6 +2,10 @@ django
 djangorestframework
 django-cors-headers
 django-filter
+django-haystack
 djangorestframework
 djangorestframework-simplejwt
+django-haystack
 python-dotenv
+mysqlclient
+Whoosh
