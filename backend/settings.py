@@ -19,7 +19,7 @@ from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 
 print("DEBUG: SECRET_KEY from env:", os.getenv("SECRET_KEY"))
 
