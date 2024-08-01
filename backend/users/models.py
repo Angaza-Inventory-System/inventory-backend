@@ -51,6 +51,7 @@ class UserManager(BaseUserManager):
             User: The newly created superuser instance.
         """
         extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_staff", True)
 
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
@@ -121,8 +122,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=30,
         validators=[MinLengthValidator(2)],
     )
-    permissions = models.JSONField(default=[], blank=True)
+    permissions = models.JSONField(default=list, blank=True)
     is_superuser = models.BooleanField(default=False)
+    is_staff =  models.BooleanField(default=False)
+    is_active =  models.BooleanField(default=True)
 
     objects = UserManager()
 

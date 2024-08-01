@@ -49,6 +49,7 @@ class UserSerializer(serializers.ModelSerializer):
             "permissions",
         ]
         extra_kwargs = {
+            "permissions": {"read_only": True},
             "password": {"write_only": True},
         }
 
@@ -69,14 +70,13 @@ class UserLoginSerializer(serializers.Serializer):
 
         user = User.objects.filter(username=username).first()
         if user is None or not user.check_password(password):
-            raise serializers.ValidationError("Invalid username or password")
+            raise serializers.ValidationError(f"Invalid username or password {user} {user.check_password(password)}")
 
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
 
         expires_at = timezone.now() + settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"]
 
-        # Save the new token in your custom model
         JWTToken.objects.create(
             user=user,
             token=access_token,
