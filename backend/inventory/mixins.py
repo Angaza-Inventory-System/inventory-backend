@@ -1,4 +1,3 @@
-import os
 
 from haystack.query import SearchQuerySet
 
