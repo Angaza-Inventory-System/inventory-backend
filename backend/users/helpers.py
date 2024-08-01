@@ -1,5 +1,3 @@
-
-
 def getDefaultPermissions():
     return []
 

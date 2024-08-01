@@ -1,4 +1,3 @@
-
 from haystack.query import SearchQuerySet
 
 
