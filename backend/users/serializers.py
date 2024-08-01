@@ -29,7 +29,6 @@ from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from backend.authen.models import JWTToken
-from backend.users.helpers import getValidPermissions
 
 from .models import User
 
