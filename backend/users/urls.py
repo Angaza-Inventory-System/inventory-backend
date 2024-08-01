@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import UserCreate, UserPermissionsViewSet, UserViewSet
+from .views import UserCreate, UserPermissionsViewSet, UserViewSet, UserPasswordUpdateView
 
 # Initialize the router
 router = DefaultRouter()
@@ -13,6 +13,7 @@ router.register(
 urlpatterns = [
     path("", include(router.urls)),
     path("register/", UserCreate.as_view(), name="user-create"),
+    path('password/', UserPasswordUpdateView.as_view(), name='user-password-update'),
     path(
         "user-permissions/<str:username>/",
         UserPermissionsViewSet.as_view(

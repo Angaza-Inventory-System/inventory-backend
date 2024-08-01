@@ -25,9 +25,11 @@ UserLoginSerializer Validation:
 
 from django.conf import settings
 from django.utils import timezone
-from rest_framework import serializers
+from rest_framework import serializers, status
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
+from rest_framework.response import Response
 from backend.authen.models import JWTToken
 
 from .models import User
@@ -58,6 +60,22 @@ class UserPermissionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["permissions"]
+
+class UserPasswordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["password"]
+
+    def validate_password(self, value):
+        password_validator = RegexValidator(
+            regex="^(?=.*\\d)(?=.*[!@#$%^&*])(?=.*[A-Z]).{10,128}$",
+            message="Password must be at least 10 characters long and include at least one digit, one special character, and one uppercase letter."
+        )
+        try:
+            password_validator(self.password)
+        except ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return value
 
 
 class UserLoginSerializer(serializers.Serializer):

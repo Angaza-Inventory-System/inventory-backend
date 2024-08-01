@@ -171,9 +171,9 @@ class Device(models.Model):
         max_length=100,
         unique=True,
         db_index=True,
+        blank=True,
     )
     year_of_manufacture = models.IntegerField()
-    shipment_date = models.DateField()
     date_received = models.DateField()
 
     created_by = models.ForeignKey(
@@ -189,9 +189,8 @@ class Device(models.Model):
         related_name="received_devices",
     )
     physical_condition = models.CharField(max_length=100)
-    specifications = models.TextField()
+    specifications = models.TextField(blank=True)
     operating_system = models.CharField(max_length=100)
-    accessories = models.TextField()
     donor = models.ForeignKey(
         Donor,
         on_delete=models.SET_NULL,
@@ -200,10 +199,8 @@ class Device(models.Model):
     )
     date_of_donation = models.DateField()
     value = models.DecimalField(max_digits=10, decimal_places=2)
-    location = models.ForeignKey(
+    warehouse = models.ForeignKey(
         Warehouse, on_delete=models.SET_NULL, null=True, related_name="stored_items"
     )
-    status = models.CharField(max_length=100)
     distributor = models.CharField(max_length=100)
-    warranty_service_info = models.TextField()
     notes = models.TextField(blank=True)
