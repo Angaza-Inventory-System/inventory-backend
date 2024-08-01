@@ -1,14 +1,12 @@
 from django.core.exceptions import ValidationError
-from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, status, viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from backend.authen.permissions import IsBlacklisted, IsSuperUser
+from backend.authen.permissions import IsBlacklisted
 from backend.inventory.pagination import CustomPagination
-from backend.users.decorators import permission_required
 
 from .helpers import getValidPermissions, updatePermissions
 from .models import User
