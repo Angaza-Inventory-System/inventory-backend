@@ -49,7 +49,7 @@ def permission_required(permissions):
                 return view_func(self_or_request, *args, **kwargs)
 
             # For non-superusers, check specific permissions
-            if not all(user.permissions.get(perm, False) for perm in permissions):
+            if any(perm not in user.permissions for perm in permissions):
                 return HttpResponseForbidden("Access denied: Insufficient permissions.")
 
             return view_func(self_or_request, *args, **kwargs)
