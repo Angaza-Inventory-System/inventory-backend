@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from backend.authen.permissions import IsBlacklisted, IsSuperUser
-from backend.devices.pagination import CustomPagination
+from backend.inventory.pagination import CustomPagination
 from backend.users.decorators import permission_required
 
 from .helpers import getValidPermissions, updatePermissions

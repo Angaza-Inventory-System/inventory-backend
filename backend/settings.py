@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_filters",
     "backend.authen",
-    "backend.devices",
+    "backend.inventory",
     "backend.users",
     "corsheaders",
     "rest_framework",

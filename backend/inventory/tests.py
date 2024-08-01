@@ -4,7 +4,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from backend.devices.models import Device, Donor, Warehouse
+from backend.inventory.models import Device, Donor, Warehouse
 from backend.users.models import User
 
 # Set up logger
