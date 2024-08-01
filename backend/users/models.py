@@ -11,7 +11,7 @@ from django.core.validators import EmailValidator, MinLengthValidator, RegexVali
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .helpers import getAllPermissions, getDefaultPermissions
+from .helpers import getAllPermissions
 from .validators import validate_permissions
 
 
@@ -121,15 +121,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=30,
         validators=[MinLengthValidator(2)],
     )
-
-    permissions = models.JSONField(
-        default=getDefaultPermissions(),
-        blank=False,
-    )
-
-    is_superuser = models.BooleanField(
-        default=False,
-    )
+    permissions = models.JSONField(default=[], blank=True)
+    is_superuser = models.BooleanField(default=False)
 
     objects = UserManager()
 

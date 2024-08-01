@@ -29,11 +29,14 @@ from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from backend.authen.models import JWTToken
+from backend.users.helpers import getValidPermissions
 
 from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    permissions = serializers.ListField(child=serializers.CharField(), required=False)
+
     class Meta:
         model = User
         fields = [
@@ -44,10 +47,23 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "is_superuser",
+            "permissions",
         ]
         extra_kwargs = {
             "password": {"write_only": True},
         }
+
+    def create(self, validated_data):
+        permissions = validated_data.pop("permissions", [])
+        user = User.objects.create_user(**validated_data)
+        user.permissions = permissions
+        user.save()
+        return user
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["permissions"] = instance.permissions
+        return representation
 
 
 class UserPermissionsSerializer(serializers.ModelSerializer):

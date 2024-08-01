@@ -15,7 +15,6 @@ from .serializers import UserPermissionsSerializer, UserSerializer
 
 @permission_classes([AllowAny])
 class UserCreate(generics.CreateAPIView):
-    queryset = User.objects.all()
     serializer_class = UserSerializer
 
 

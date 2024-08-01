@@ -1,7 +1,3 @@
-def getDefaultPermissions():
-    return []
-
-
 def getAllPermissions():
     return [
         "readDevices",
