@@ -5,11 +5,13 @@ from django.apps import apps
 from django.db.models import Max
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, generics, status, viewsets
+from rest_framework import filters, status, viewsets
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from backend.authen.permissions import IsNotBlacklisted
+from backend.authen.permissions import IsBlacklisted
+from backend.users.decorators import permission_required
 
 from .error_utils import handle_exception
 from .mixins import SearchAndLimitMixin
@@ -18,7 +20,7 @@ from .pagination import CustomPagination
 from .serializers import DeviceSerializer, DonorSerializer, WarehouseSerializer
 
 
-@permission_classes([IsNotBlacklisted])
+@permission_classes([IsBlacklisted])
 class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
@@ -86,8 +88,31 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     ]
     ordering = ["type"]
 
+    @permission_required(["readDevices"])
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
-@permission_classes([IsNotBlacklisted])
+    @permission_required(["createDevices"])
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+    @permission_required(["editDevices"])
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @permission_required(["editDevices"])
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    @permission_required(["deleteDevices"])
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        self.perform_destroy(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@permission_classes([IsBlacklisted])
 class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
@@ -126,8 +151,31 @@ class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     ]
     ordering = ["warehouse_number"]
 
+    @permission_required(["manageWarehouses"])
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
-@permission_classes([IsNotBlacklisted])
+    @permission_required(["manageWarehouses"])
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+    @permission_required(["manageWarehouses"])
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @permission_required(["manageWarehouses"])
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    @permission_required(["manageWarehouses"])
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        self.perform_destroy(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@permission_classes([IsBlacklisted])
 class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
@@ -159,45 +207,32 @@ class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     ordering_fields = ["name", "email", "phone"]
     ordering = ["name"]
 
+    @permission_required(["manageDonors"])
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
-@permission_classes([IsNotBlacklisted])
-class DeviceListCreate(generics.ListCreateAPIView):
-    queryset = Device.objects.all()
-    serializer_class = DeviceSerializer
+    @permission_required(["manageDonors"])
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
 
+    @permission_required(["manageDonors"])
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
 
-@permission_classes([IsNotBlacklisted])
-class DeviceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Device.objects.all()
-    serializer_class = DeviceSerializer
+    @permission_required(["manageDonors"])
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
 
-
-@permission_classes([IsNotBlacklisted])
-class WarehouseListCreate(generics.ListCreateAPIView):
-    queryset = Warehouse.objects.all()
-    serializer_class = WarehouseSerializer
-
-
-@permission_classes([IsNotBlacklisted])
-class WarehouseRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Warehouse.objects.all()
-    serializer_class = WarehouseSerializer
-
-
-@permission_classes([IsNotBlacklisted])
-class DonorListCreate(generics.ListCreateAPIView):
-    queryset = Donor.objects.all()
-    serializer_class = DonorSerializer
-
-
-@permission_classes([IsNotBlacklisted])
-class DonorRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Donor.objects.all()
-    serializer_class = DonorSerializer
+    @permission_required(["manageDonors"])
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        self.perform_destroy(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(["DELETE"])
-@permission_classes([IsNotBlacklisted])
+@permission_classes([IsBlacklisted])
 def batch_delete(request):
     model_name = "devices." + request.query_params.get("model").capitalize()
     model = get_model(model_name)
@@ -225,7 +260,7 @@ def batch_delete(request):
 
 
 @api_view(["POST"])
-@permission_classes([IsNotBlacklisted])
+@permission_classes([IsBlacklisted])
 def batch_create(request):
     model_name = "devices." + request.query_params.get("model").capitalize()
     model = get_model(model_name)
