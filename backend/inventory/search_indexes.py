@@ -19,7 +19,8 @@ class DeviceIndex(indexes.SearchIndex, indexes.Indexable):
     mac_id = indexes.CharField(model_attr="mac_id")
     serial_number = indexes.CharField(model_attr="serial_number")
 
-    def get_model(self):
+    @staticmethod
+    def get_model():
         return Device
 
     def index_queryset(self, using=None):
@@ -34,7 +35,8 @@ class DonorIndex(indexes.SearchIndex, indexes.Indexable):
     email = indexes.CharField(model_attr="email")
     phone = indexes.CharField(model_attr="phone")
 
-    def get_model(self):
+    @staticmethod
+    def get_model():
         return Donor
 
     def index_queryset(self, using=None):
@@ -50,7 +52,8 @@ class WarehouseIndex(indexes.SearchIndex, indexes.Indexable):
     postal_code = indexes.CharField(model_attr="postal_code")
     phone = indexes.CharField(model_attr="phone")
 
-    def get_model(self):
+    @staticmethod
+    def get_model():
         return Warehouse
 
     def index_queryset(self, using=None):
