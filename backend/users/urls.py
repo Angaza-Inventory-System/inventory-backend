@@ -3,7 +3,6 @@ from rest_framework.routers import DefaultRouter
 
 from .views import UserCreate, UserPermissionsViewSet, UserViewSet, UserPasswordUpdateView
 
-# Initialize the router
 router = DefaultRouter()
 router.register(r"users", UserViewSet, basename="user")
 router.register(

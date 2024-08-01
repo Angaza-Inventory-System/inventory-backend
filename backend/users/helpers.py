@@ -1,15 +1,7 @@
+from .utils import allPermissions
+
 def getAllPermissions():
-    return [
-        "readDevices",
-        "createDevices",
-        "editDevices",
-        "deleteDevices",
-        "scanDevices",
-        "bulkUploadDevices",
-        "manageWarehouses",
-        "manageDonors",
-        "generateQRCodes",
-    ]
+    return allPermissions
 
 
 def getValidPermissions(request_data):
