@@ -21,9 +21,8 @@ def handle_exception(exception):
             {"error": "Integrity error", "details": str(exception)},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    else:
-        # Handle other exceptions
-        return Response(
-            {"error": "An unexpected error occurred", "details": str(exception)},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        )
+    # Handle other exceptions
+    return Response(
+        {"error": "An unexpected error occurred", "details": str(exception)},
+        status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    )
