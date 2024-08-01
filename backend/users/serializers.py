@@ -71,9 +71,6 @@ class UserLoginSerializer(serializers.Serializer):
         if user is None or not user.check_password(password):
             raise serializers.ValidationError("Invalid username or password")
 
-        # Blacklist existing tokens for the user in your custom model
-        JWTToken.objects.filter(user=user).update(is_blacklisted=True)
-
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
 
