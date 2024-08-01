@@ -5,8 +5,7 @@ from .views import (
     DeviceViewSet,
     DonorViewSet,
     WarehouseViewSet,
-    batch_create,
-    batch_delete,
+    batch_operations,
     generate_mock_data,
 )
 
@@ -17,9 +16,8 @@ router.register(r"donors", DonorViewSet, basename="donor")
 
 urlpatterns = [
     path("", include(router.urls)),
-    # Batch URLs
-    path("batch-create/", batch_create, name="batch-create"),
-    path("batch-delete/", batch_delete, name="batch-delete"),
+    # Batch Actions URL
+    path("batch/", batch_operations, name="batch-operations"),
     # Mock Data Generation URL
     path("generate-mock-data/", generate_mock_data, name="generate-mock-data"),
 ]
