@@ -15,7 +15,6 @@ from datetime import timedelta
 from pathlib import Path
 
 from django.conf import settings
-from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
