@@ -53,18 +53,6 @@ class UserSerializer(serializers.ModelSerializer):
             "password": {"write_only": True},
         }
 
-    def create(self, validated_data):
-        permissions = validated_data.pop("permissions", [])
-        user = User.objects.create_user(**validated_data)
-        user.permissions = permissions
-        user.save()
-        return user
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation["permissions"] = instance.permissions
-        return representation
-
 
 class UserPermissionsSerializer(serializers.ModelSerializer):
     class Meta:
