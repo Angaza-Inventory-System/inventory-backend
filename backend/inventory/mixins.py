@@ -17,9 +17,12 @@ class SearchAndLimitMixin:
                 .filter(content=search_query)
             )
             object_ids = [result.pk for result in sqs]
-            pk_field = self.queryset.model._meta.pk.name
+            pk_field = self.get_pk_field()
             queryset = queryset.filter(**{f"{pk_field}__in": object_ids})
         return queryset
+
+    def get_pk_field(self):
+        return self.queryset.model._meta.pk.name
 
     def get_queryset(self):
         queryset = super().get_queryset()
