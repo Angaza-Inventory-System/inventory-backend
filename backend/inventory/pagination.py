@@ -32,7 +32,7 @@ class CustomPagination(PageNumberPagination):
         if page_size is not None:
             try:
                 page_size = int(page_size)
-                if page_size > 0 and page_size <= self.max_page_size:
+                if 0 < page_size <= self.max_page_size:
                     return page_size
             except ValueError:
                 pass
