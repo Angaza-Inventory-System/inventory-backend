@@ -31,9 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY", default="")
 DEBUG = os.getenv("ENV") != "prod"
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 print(f"Environment: {os.getenv('ENV')}")
 print(f"Debug: {DEBUG}")
@@ -78,7 +76,10 @@ CORS_ALLOWED_ORIGINS = [
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "backend/templates")],
+        "DIRS": [
+            os.path.join(BASE_DIR, "backend/templates"),
+            os.path.join(BASE_DIR, "backend/authen/templates"),
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

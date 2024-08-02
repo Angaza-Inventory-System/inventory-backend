@@ -1,31 +1,22 @@
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+from .utils import allPermissions
+
 
 def validate_permissions(value):
     """
     Validate that permissions is a list and only contains valid permissions.
     """
-    all_permissions = {
-        "readDevices",
-        "createDevices",
-        "editDevices",
-        "deleteDevices",
-        "scanDevices",
-        "bulkUploadDevices",
-        "manageWarehouses",
-        "manageDonors",
-        "generateQRCodes",
-    }
 
     if not isinstance(value, list):
         raise ValidationError(_("Permissions must be a list."))
 
-    invalid_permissions = [perm for perm in value if perm not in all_permissions]
+    invalidPermissions = [perm for perm in value if perm not in allPermissions]
 
-    if invalid_permissions:
+    if invalidPermissions:
         raise ValidationError(
-            _("Invalid permissions: %s") % ", ".join(invalid_permissions)
+            _("Invalid permissions: %s") % ", ".join(invalidPermissions)
         )
 
     if len(value) != len(set(value)):
