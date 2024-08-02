@@ -6,10 +6,10 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from backend.authen.permissions import IsBlacklisted
+from backend.authen.permissions import IsBlacklisted, IsSuperUser
 from backend.inventory.pagination import CustomPagination
 
-from .helpers import getValidPermissions, updatePermissions
+from .helpers.permissionsHelpers import getValidPermissions, updatePermissions
 from .models import User
 from .serializers import (
     UserPasswordSerializer,
@@ -17,14 +17,32 @@ from .serializers import (
     UserSerializer,
 )
 
-
 @permission_classes([AllowAny])
 class UserCreate(generics.CreateAPIView):
-    serializer_class = UserSerializer
+    """
+    Endpoint for creating a new User.
 
+    **Permissions:**
+    - `AllowAny`
+    """
+    serializer_class = UserSerializer
 
 @permission_classes([IsBlacklisted])
 class UserViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing User records.
+
+    Provides endpoints for listing, creating, updating, and deleting users.
+    
+    **Permissions:**
+    - `GET`, `POST`, `PUT`, `PATCH`, `DELETE`: 'manageUsers'
+
+    **Filtering:**
+    - Fields: username, email, first_name, last_name, role
+    
+    **Ordering:**
+    - Fields: username, email, first_name, last_name
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = CustomPagination
@@ -39,24 +57,14 @@ class UserViewSet(viewsets.ModelViewSet):
     ordering_fields = ["username", "email", "first_name", "last_name"]
     ordering = ["username"]
 
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
-
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
-
-    def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(request, *args, **kwargs)
-
-    def destroy(self, request, *args, **kwargs):
-        return super().destroy(request, *args, **kwargs)
-
-
 @permission_classes([IsBlacklisted])
 class UserPasswordUpdateView(generics.UpdateAPIView):
+    """
+    Endpoint for updating a user's password.
+
+    **Permissions:**
+    - `IsBlacklisted`
+    """
     serializer_class = UserPasswordSerializer
 
     def get_object(self):
@@ -81,13 +89,23 @@ class UserPasswordUpdateView(generics.UpdateAPIView):
             {"detail": "Password updated successfully."}, status=status.HTTP_200_OK
         )
 
-
-@permission_classes([IsBlacklisted])
+@permission_classes([IsBlacklisted, IsSuperUser])
 class UserPermissionsViewSet(viewsets.GenericViewSet):
     """
-    A viewset for managing user permissions.
-    """
+    ViewSet for managing user permissions.
 
+    **Permissions:**
+    - `GET`: 'managePermissions'
+    - `PATCH`, `PUT`: 'managePermissions'
+    - `DELETE`: 'managePermissions'
+
+    **Actions:**
+    - `retrieve`: Get current permissions
+    - `partial_update`: Add permissions
+    - `update`: Replace permissions
+    - `destroy`: Remove permissions
+    - `delete_all_permissions`: Clear all permissions
+    """
     queryset = User.objects.all()
     serializer_class = UserPermissionsSerializer
     lookup_field = "username"
@@ -112,9 +130,7 @@ class UserPermissionsViewSet(viewsets.GenericViewSet):
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         try:
-            print(request.data)
             new_permissions = getValidPermissions(request.data)
-            print(new_permissions)
             updatePermissions(instance, new_permissions, operation="replace")
             return Response(
                 {"permissions": instance.permissions}, status=status.HTTP_200_OK

@@ -1,12 +1,15 @@
 from rest_framework import permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from backend.users.models import User
 
 from .models import JWTToken
+from .helpers.getUser import getUserFromRequest
 
 
 class IsBlacklisted(permissions.BasePermission):
     """
-    Custom permission to check if the JWT token is blacklisted.
+    Custom permission to check the user has a whitelisted token.
+    IsAuthorized becomes redundant using the permission class.
 
     This permission class ensures that the JWT token provided in the request
     is not blacklisted before allowing access to the view. If the token is
@@ -40,12 +43,20 @@ class IsBlacklisted(permissions.BasePermission):
             return False
 
         return True
-
+    
 
 class IsSuperUser(permissions.BasePermission):
     """
-    Allows access only to superusers.
+    Permission that only allows access to superusers.
     """
 
     def has_permission(self, request, view):
-        return bool(request.user and request.user.is_superuser)
+        user, error_message = getUserFromRequest(request)
+        
+        if user is None:
+            return False
+        
+        if user.is_superuser:
+            return True
+        
+        return False

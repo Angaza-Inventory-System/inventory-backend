@@ -1,3 +1,48 @@
+"""
+Serializers for the inventory management system.
+
+This module defines serializers for the models used in the inventory system,
+providing functionality for serializing and deserializing data for various API
+endpoints.
+
+BaseSerializer:
+- A base serializer class that provides common functionality for handling related
+  fields and customizing the representation of serialized data. It includes:
+  - `create_related_fields(fields)`: Dynamically creates fields for related models
+    and adds their serializers.
+  - `to_representation(instance)`: Customizes the output representation of
+    serialized data by including detailed representations of related fields.
+
+LocationSerializer:
+- Serializer for the Location model.
+- Inherits from BaseSerializer and includes all fields from the Location model.
+- Does not include any related fields.
+
+DonorSerializer:
+- Serializer for the Donor model.
+- Inherits from BaseSerializer and includes all fields from the Donor model.
+- Does not include any related fields.
+
+ShipmentSerializer:
+- Serializer for the Shipment model.
+- Inherits from BaseSerializer and includes all fields from the Shipment model.
+- Includes a related field for `destination`, which is a foreign key to the Location model.
+- `destination` field is represented using the LocationSerializer.
+
+DeviceSerializer:
+- Serializer for the Device model.
+- Inherits from BaseSerializer and includes all fields from the Device model.
+- Sets `device_id` as read-only.
+- Includes related fields for:
+  - `donor`: Represented using the DonorSerializer.
+  - `start_location` and `end_location`: Represented using the LocationSerializer.
+  - `created_by` and `received_by`: Represented using the UserSerializer.
+  - `shipping_infos`: Represented using the ShipmentSerializer.
+
+Each related field in the DeviceSerializer is dynamically created in the `__init__`
+method, allowing for detailed nested representations in API responses.
+"""
+
 from rest_framework import serializers
 from backend.users.serializers import UserSerializer
 from backend.users.models import User

@@ -6,8 +6,23 @@ from django.utils import timezone
 
 from ..models import Device, Donor, Location
 
-
 def generate_mock_warehouse(num_warehouses):
+    """
+    Generates a list of mock warehouse data.
+
+    Args:
+        num_warehouses (int): The number of mock warehouses to generate.
+
+    Returns:
+        list: A list of dictionaries, each representing a mock warehouse.
+              Each dictionary contains the following keys:
+              - "warehouse_number": The physical identifier for the warehouse.
+              - "name": The name of the warehouse.
+              - "country": The country where the warehouse is located.
+              - "city": The city where the warehouse is located.
+              - "postal_code": The postal code of the warehouse's location.
+              - "phone": The phone number of the warehouse.
+    """
     warehouses = []
     # Get the maximum existing warehouse number
     max_warehouse_number = (
@@ -29,6 +44,21 @@ def generate_mock_warehouse(num_warehouses):
 
 
 def generate_mock_donor(num_donors):
+    """
+    Generates a list of mock donor data.
+
+    Args:
+        num_donors (int): The number of mock donors to generate.
+
+    Returns:
+        list: A list of dictionaries, each representing a mock donor.
+              Each dictionary contains the following keys:
+              - "name": The name of the donor.
+              - "contact_info": The contact information of the donor.
+              - "address": The address of the donor.
+              - "email": The email address of the donor.
+              - "phone": The phone number of the donor.
+    """
     donors = []
     # Get the count of existing donors
     existing_donors_count = Donor.objects.count()
@@ -46,6 +76,41 @@ def generate_mock_donor(num_donors):
 
 
 def generate_mock_device(num_devices, warehouses, donors, users):
+    """
+    Generates a list of mock device data.
+
+    Args:
+        num_devices (int): The number of mock devices to generate.
+        warehouses (list): A list of mock warehouse dictionaries to assign locations.
+        donors (list): A list of mock donor dictionaries to assign donors.
+        users (list): A list of users to assign as `received_by` and `created_by`.
+
+    Returns:
+        list: A list of dictionaries, each representing a mock device.
+              Each dictionary contains the following keys:
+              - "type": The type of the device.
+              - "make": The make of the device.
+              - "model": The model of the device.
+              - "serial_number": The serial number of the device.
+              - "mac_id": The MAC ID of the device.
+              - "year_of_manufacture": The year the device was manufactured.
+              - "shipment_date": The date the device was shipped.
+              - "date_received": The date the device was received.
+              - "received_by": The user who received the device.
+              - "physical_condition": The physical condition of the device.
+              - "specifications": The specifications of the device.
+              - "operating_system": The operating system of the device.
+              - "accessories": The accessories included with the device.
+              - "donor": The donor of the device.
+              - "date_of_donation": The date the device was donated.
+              - "value": The value of the device.
+              - "location": The location (warehouse) where the device is stored.
+              - "created_by": The user who created the device record.
+              - "status": The status of the device.
+              - "distributor": The distributor of the device.
+              - "warranty_service_info": The warranty service information for the device.
+              - "notes": Additional notes about the device.
+    """
     devices = []
     # Get the count of existing devices
     existing_devices_count = Device.objects.count()

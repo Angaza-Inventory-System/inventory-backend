@@ -3,6 +3,8 @@ Serializers for User model instances and user login authentication.
 
 Serializers:
 - UserSerializer: Serializes User model instances.
+- UserPermissionsSerializer: Serializes the permissions field of the User model.
+- UserPasswordSerializer: Validates the password field for the User model.
 - UserLoginSerializer: Validates user login credentials and generates JWT tokens.
 
 UserSerializer Fields:
@@ -12,6 +14,19 @@ UserSerializer Fields:
 - role (str): The role of the user.
 - first_name (str): The first name of the user.
 - last_name (str): The last name of the user.
+- is_superuser (bool): Boolean indicating whether the user has superuser status.
+- permissions (list of str, read-only): List of user permissions.
+
+UserPermissionsSerializer Fields:
+- permissions (list of str): List of user permissions.
+
+UserPasswordSerializer Fields:
+- password (str): The password of the user.
+
+UserPasswordSerializer Validation:
+- Validates the password against specified constraints:
+  - At least 10 characters long.
+  - Must include at least one digit, one special character (!@#$%^&*), and one uppercase letter.
 
 UserLoginSerializer Fields:
 - username (str): The username provided for login.

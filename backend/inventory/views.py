@@ -12,7 +12,7 @@ from backend.inventory.helpers.mock_data import (
 )
 from backend.users.decorators import permission_required
 
-from .error_utils import handle_exception
+from .helpers.error_utils import handle_exception
 from .mixins import SearchAndLimitMixin
 from .models import Device, Donor, Location, Shipment, User
 from .pagination import CustomPagination
@@ -21,6 +21,18 @@ from .base_viewset import PermissionRequiredViewSet
 
 
 class DeviceViewSet(PermissionRequiredViewSet):
+    """
+    ViewSet for managing Device records.
+
+    Provides endpoints for listing, creating, retrieving, updating, and deleting devices.
+    Supports filtering, searching, and ordering.
+
+    Permissions:
+    - `GET`: 'readDevices'
+    - `POST`: 'createDevices'
+    - `PUT`, `PATCH`: 'editDevices'
+    - `DELETE`: 'deleteDevices'
+    """
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
     pagination_class = CustomPagination
@@ -79,6 +91,15 @@ class DeviceViewSet(PermissionRequiredViewSet):
     }
 
 class LocationViewSet(PermissionRequiredViewSet):
+    """
+    ViewSet for managing Location records.
+
+    Provides endpoints for listing, creating, retrieving, updating, and deleting locations.
+    Supports filtering, searching, and ordering.
+
+    Permissions:
+    - `GET`, `POST`, `PUT`, `PATCH`, `DELETE`: 'manageWarehouses'
+    """
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
     filter_backends = [
@@ -119,6 +140,15 @@ class LocationViewSet(PermissionRequiredViewSet):
     }
 
 class DonorViewSet(PermissionRequiredViewSet):
+    """
+    ViewSet for managing Donor records.
+
+    Provides endpoints for listing, creating, retrieving, updating, and deleting donors.
+    Supports filtering, searching, and ordering.
+
+    Permissions:
+    - `GET`, `POST`, `PUT`, `PATCH`, `DELETE`: 'manageDonors'
+    """
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
     filter_backends = [
@@ -151,6 +181,15 @@ class DonorViewSet(PermissionRequiredViewSet):
     }
 
 class ShipmentViewSet(PermissionRequiredViewSet):
+    """
+    ViewSet for managing Shipment records.
+
+    Provides endpoints for listing, creating, retrieving, updating, and deleting shipments.
+    Supports filtering, searching, and ordering.
+
+    Permissions:
+    - `GET`, `POST`, `PUT`, `PATCH`, `DELETE`: 'manageShipments'
+    """
     queryset = Shipment.objects.all()
     serializer_class = ShipmentSerializer
     pagination_class = CustomPagination
@@ -190,6 +229,21 @@ class ShipmentViewSet(PermissionRequiredViewSet):
 @permission_classes([IsBlacklisted])
 @permission_required('batchUploadDevices')
 def batch_operations(request):
+    """
+    Handle batch operations for device records.
+
+    Allows batch editing or deleting of records based on the model specified.
+
+    Parameters:
+    - `model`: The name of the model to operate on (e.g., 'devices.Device').
+
+    Methods:
+    - `PATCH`: Batch edit records.
+    - `DELETE`: Batch delete records.
+
+    Returns:
+    - Success or error message.
+    """
     model_name = "devices." + request.query_params.get("model").capitalize()
     model = get_model(model_name)
 
@@ -206,6 +260,17 @@ def batch_operations(request):
 
 
 def batch_edit(request, model):
+    """
+    Batch edit records in the specified model.
+
+    Updates records based on provided data.
+
+    Request Data:
+    - `objects`: List of records to update, each including an `id` field and other fields to update.
+
+    Returns:
+    - Success message with count of updated records or error message.
+    """
     data_list = request.data.get("objects")
     if not data_list or not isinstance(data_list, list):
         return Response(
@@ -238,15 +303,27 @@ def batch_edit(request, model):
 
 
 def batch_delete(request, model):
-    ids = validate_ids(request.data, "ids")
-    if not ids:
+    """
+    Batch delete records in the specified model.
+
+    Deletes records based on provided IDs.
+
+    Request Data:
+    - `ids`: List of IDs of records to delete.
+
+    Returns:
+    - Success message with count of deleted records or error message.
+    """
+    ids = request.data.get("ids")
+    if not ids or not isinstance(ids, list):
         return Response(
-            {"error": "Request must contain a list of 'ids' to delete."},
+            {"error": "Request must contain a list of IDs to delete."},
             status=status.HTTP_400_BAD_REQUEST,
         )
 
     try:
-        deleted_count, _ = model.objects.filter(pk__in=ids).delete()
+        ids = validate_ids(ids, model)
+        deleted_count, _ = model.objects.filter(id__in=ids).delete()
         return Response(
             {"message": f"{deleted_count} records deleted successfully."},
             status=status.HTTP_200_OK,
@@ -254,33 +331,41 @@ def batch_delete(request, model):
     except Exception as e:
         return handle_exception(e)
 
-
 @api_view(["POST"])
 def generate_mock_data(request):
+    """
+    Generate and populate the database with mock data for warehouses, donors, and devices.
+
+    **Request Parameters:**
+    - `num_warehouses`: Number of mock warehouse records (default: 5).
+    - `num_donors`: Number of mock donor records (default: 10).
+    - `num_devices`: Number of mock device records (default: 50).
+
+    **Response:**
+    - `message`: Success message.
+    - `warehouses_created`: Number of created warehouses.
+    - `donors_created`: Number of created donors.
+    - `devices_created`: Number of created devices.
+
+    **Errors:**
+    - Returns a 500 status code with an error message if an exception occurs.
+    """
     try:
         num_warehouses = request.data.get("num_warehouses", 5)
         num_donors = request.data.get("num_donors", 10)
         num_devices = request.data.get("num_devices", 50)
 
-        # Generate mock data
         new_warehouses = generate_mock_warehouse(num_warehouses)
         new_donors = generate_mock_donor(num_donors)
 
-        # Create warehouse and donor objects
-        created_warehouses = Location.objects.bulk_create(
-            [Location(**w) for w in new_warehouses]
-        )
+        created_warehouses = Location.objects.bulk_create([Location(**w) for w in new_warehouses])
         created_donors = Donor.objects.bulk_create([Donor(**d) for d in new_donors])
 
-        # Get all warehouses, donors, and users for device creation
         all_warehouses = list(Location.objects.all())
         all_donors = list(Donor.objects.all())
         all_users = list(User.objects.all())
 
-        # Generate and create device objects
-        new_devices = generate_mock_device(
-            num_devices, all_warehouses, all_donors, all_users
-        )
+        new_devices = generate_mock_device(num_devices, all_warehouses, all_donors, all_users)
         created_devices = Device.objects.bulk_create([Device(**d) for d in new_devices])
 
         return Response(

@@ -11,7 +11,7 @@ from django.core.validators import EmailValidator, MinLengthValidator, RegexVali
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .utils import allPermissions
+from .helpers.utils import allPermissions
 from .validators import validate_permissions
 
 
@@ -51,7 +51,6 @@ class UserManager(BaseUserManager):
             User: The newly created superuser instance.
         """
         extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("is_staff", True)
 
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
@@ -124,8 +123,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     permissions = models.JSONField(default=list, blank=True)
     is_superuser = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
 
     objects = UserManager()
 

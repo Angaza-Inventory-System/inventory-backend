@@ -3,6 +3,37 @@ from rest_framework.response import Response
 from backend.users.decorators import permission_required
 
 class PermissionRequiredViewSet(viewsets.ModelViewSet):
+    """
+    A base viewset that requires specific permissions for different actions.
+
+    This viewset applies the `permission_required` decorator to the actions listed
+    in `permission_required_map`. If the required permissions are not met, a 403 Forbidden
+    response is returned. Otherwise, the request is processed normally.
+
+    Attributes:
+        permission_required_map (dict): A dictionary mapping action names to permission
+                                        strings required for those actions.
+
+    Methods:
+        dispatch(request, *args, **kwargs):
+            Handles the request, applying the appropriate permission decorator based
+            on the action being requested.
+
+        list(request, *args, **kwargs):
+            Handles GET requests to list all objects.
+
+        create(request, *args, **kwargs):
+            Handles POST requests to create a new object.
+
+        update(request, *args, **kwargs):
+            Handles PUT requests to update an existing object.
+
+        patch(request, *args, **kwargs):
+            Handles PATCH requests to partially update an existing object.
+
+        destroy(request, *args, **kwargs):
+            Handles DELETE requests to delete an existing object.
+    """
     permission_required_map = {}
 
     def dispatch(self, request, *args, **kwargs):

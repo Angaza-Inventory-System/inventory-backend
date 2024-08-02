@@ -3,7 +3,7 @@ URL patterns for user authentication through API login.
 
 Endpoints:
     User Login:
-        - {{BaseURL}}/login/:
+        - {{BaseURL}}/authen/login/:
             - POST: Authenticate a user and return a JWT token.
 """
 

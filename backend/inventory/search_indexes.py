@@ -1,3 +1,29 @@
+"""
+Search Indexes for the inventory management system.
+
+This module defines search indexes for various models used in the inventory system, 
+allowing full-text search functionality using Haystack.
+
+Indexes:
+- DeviceIndex: Indexes the Device model, including fields like device_id, type, make, model, 
+  and other relevant attributes.
+- DonorIndex: Indexes the Donor model, covering fields such as name, contact_info, address, 
+  email, and phone.
+- WarehouseIndex: Indexes the Location model (representing warehouses), including fields 
+  like name, country, city, postal_code, and phone.
+- ShipmentIndex: Indexes the Shipment model, capturing details like shipping_id, 
+  destination_name, arrived status, date_shipped, date_delivered, and tracking_identifier.
+
+Each index class inherits from Haystack's SearchIndex and Indexable, and defines the 
+fields to be indexed and the queryset to be used for indexing. The `get_model()` 
+method specifies the model to be indexed, and the `index_queryset()` method 
+provides the queryset for the index.
+
+Usage:
+- These indexes enable full-text search capabilities for devices, donors, locations, and shipments 
+  in the inventory system.
+"""
+
 from haystack import indexes
 from .models import Device, Donor, Location, Shipment
 
