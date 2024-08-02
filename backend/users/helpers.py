@@ -1,10 +1,6 @@
 from .utils import allPermissions
 
 
-def getAllPermissions():
-    return allPermissions
-
-
 def getValidPermissions(request_data):
     permissions = request_data.get("permissions")
     return permissions

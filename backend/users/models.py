@@ -11,7 +11,7 @@ from django.core.validators import EmailValidator, MinLengthValidator, RegexVali
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .helpers import getAllPermissions
+from .utils import allPermissions
 from .validators import validate_permissions
 
 
@@ -138,7 +138,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         validate_permissions(self.permissions)
 
         if self.is_superuser:
-            self.permissions = getAllPermissions()
+            self.permissions = allPermissions
 
         # Password validation
         password_validator = RegexValidator(

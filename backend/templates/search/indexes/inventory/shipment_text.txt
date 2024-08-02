@@ -1,0 +1,4 @@
+{{ object.arrived }}
+{{ object.date_shipped }}
+{{ object.date_delivered }}
+{{ object.tracking_identifier }}

@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from backend.users.models import User
 
 
-class Shipping(models.Model):
+class Shipment(models.Model):
     shipping_id = models.AutoField(primary_key=True)
     destination = models.ForeignKey(
         "Location",
@@ -55,11 +55,11 @@ class Location(models.Model):
     location_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=100)
-    address = models.TextField(max_length=500)
-    country = models.CharField(max_length=100)
+    address = models.TextField(max_length=500, unique=True,)
+    country = models.CharField(max_length=100, )
     city = models.CharField(max_length=100)
     postal_code = models.CharField(max_length=20)
-    phone = models.CharField(max_length=20, blank=True)
+    phone = models.CharField(max_length=20, blank=True, unique=True,)
 
 
 class Donor(models.Model):
@@ -153,7 +153,7 @@ class Device(models.Model):
             - Constraints:
                 - No specific constraints.
         value (DecimalField): The value of the device, provided by accounting.
-            - Constraints:
+            - Constraints:a
                 - Must be a decimal number with up to 10 digits and 2 decimal places (DecimalField).
         location (ForeignKey): The location of the device in the warehouse.
             - Constraints:
@@ -221,5 +221,5 @@ class Device(models.Model):
     )
     notes = models.TextField(blank=True)
     shipping_infos = models.ManyToManyField(
-        Shipping, related_name="devices", blank=True
+        Shipment, related_name="devices", blank=True
     )

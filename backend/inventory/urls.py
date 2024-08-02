@@ -4,15 +4,17 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     DeviceViewSet,
     DonorViewSet,
-    WarehouseViewSet,
+    LocationViewSet,
+    ShipmentViewSet,
     batch_operations,
     generate_mock_data,
 )
 
 router = DefaultRouter()
-router.register(r"devices", DeviceViewSet, basename="device")
-router.register(r"warehouses", WarehouseViewSet, basename="warehouse")
-router.register(r"donors", DonorViewSet, basename="donor")
+router.register(r'devicesƒ', DeviceViewSet)
+router.register(r'locations', LocationViewSet)
+router.register(r'donors', DonorViewSet)
+router.register(r'shipments', ShipmentViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),

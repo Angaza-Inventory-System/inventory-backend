@@ -7,5 +7,6 @@ allPermissions = [
     "bulkUploadDevices",
     "manageWarehouses",
     "manageDonors",
+    "manageShipments",
     "generateQRCodes",
 ]

@@ -1,7 +1,5 @@
 from haystack import indexes
-
-from .models import Device, Donor, Location
-
+from .models import Device, Donor, Location, Shipment
 
 class DeviceIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
@@ -26,7 +24,6 @@ class DeviceIndex(indexes.SearchIndex, indexes.Indexable):
     def index_queryset(self, using=None):
         return self.get_model().objects.all()
 
-
 class DonorIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     name = indexes.CharField(model_attr="name")
@@ -42,10 +39,8 @@ class DonorIndex(indexes.SearchIndex, indexes.Indexable):
     def index_queryset(self, using=None):
         return self.get_model().objects.all()
 
-
 class WarehouseIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    warehouse_number = indexes.CharField(model_attr="warehouse_number")
     name = indexes.CharField(model_attr="name")
     country = indexes.CharField(model_attr="country")
     city = indexes.CharField(model_attr="city")
@@ -54,7 +49,23 @@ class WarehouseIndex(indexes.SearchIndex, indexes.Indexable):
 
     @staticmethod
     def get_model():
-        return Location
+        return Location  # Ensure this matches your actual model
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.all()
+
+class ShipmentIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, use_template=True)
+    shipping_id = indexes.CharField(model_attr="shipping_id")
+    destination_name = indexes.CharField(model_attr="destination__name")
+    arrived = indexes.BooleanField(model_attr="arrived")
+    date_shipped = indexes.DateField(model_attr="date_shipped")
+    date_delivered = indexes.DateField(model_attr="date_delivered", null=True)
+    tracking_identifier = indexes.CharField(model_attr="tracking_identifier")
+
+    @staticmethod
+    def get_model():
+        return Shipment
 
     def index_queryset(self, using=None):
         return self.get_model().objects.all()

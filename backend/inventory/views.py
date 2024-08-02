@@ -14,22 +14,16 @@ from backend.users.decorators import permission_required
 
 from .error_utils import handle_exception
 from .mixins import SearchAndLimitMixin
-from .models import Device, Donor, Location, User
+from .models import Device, Donor, Location, Shipment, User
 from .pagination import CustomPagination
-from .serializers import DeviceSerializer, DonorSerializer, WarehouseSerializer
+from .serializers import DeviceSerializer, DonorSerializer, LocationSerializer, ShipmentSerializer
+from .base_viewset import PermissionRequiredViewSet
 
 
-@permission_classes([IsBlacklisted])
-class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
+class DeviceViewSet(PermissionRequiredViewSet):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
-    serializer_class = DeviceSerializer
     pagination_class = CustomPagination
-    filter_backends = [
-        DjangoFilterBackend,
-        filters.OrderingFilter,
-        filters.SearchFilter,
-    ]
     filter_backends = [
         DjangoFilterBackend,
         filters.OrderingFilter,
@@ -74,52 +68,19 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "donor__name",
         "location__name",
         "created_by__username",
-        "type",
-        "make",
-        "model",
-        "year_of_manufacture",
-        "status",
-        "operating_system",
-        "physical_condition",
-        "donor__name",
-        "location__name",
-        "created_by__username",
     ]
     ordering = ["type"]
+    permission_required_map = {
+        'get': ['readDevices'],
+        'post': ['createDevices'],
+        'put': ['editDevices'],
+        'patch': ['editDevices'],
+        'delete': ['deleteDevices'],
+    }
 
-    @permission_required(["readDevices"])
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-    @permission_required(["createDevices"])
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
-
-    @permission_required(["editDevices"])
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
-
-    @permission_required(["editDevices"])
-    def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(request, *args, **kwargs)
-
-    @permission_required(["deleteDevices"])
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        self.perform_destroy(instance)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-@permission_classes([IsBlacklisted])
-class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
+class LocationViewSet(PermissionRequiredViewSet):
     queryset = Location.objects.all()
-    serializer_class = WarehouseSerializer
-    filter_backends = [
-        DjangoFilterBackend,
-        filters.OrderingFilter,
-        filters.SearchFilter,
-    ]
+    serializer_class = LocationSerializer
     filter_backends = [
         DjangoFilterBackend,
         filters.OrderingFilter,
@@ -149,40 +110,17 @@ class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "phone",
     ]
     ordering = ["warehouse_number"]
+    permission_required_map = {
+        'get': ['manageWarehouses'],
+        'post': ['manageWarehouses'],
+        'put': ['manageWarehouses'],
+        'patch': ['manageWarehouses'],
+        'delete': ['manageWarehouses'],
+    }
 
-    @permission_required(["manageWarehouses"])
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-    @permission_required(["manageWarehouses"])
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
-
-    @permission_required(["manageWarehouses"])
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
-
-    @permission_required(["manageWarehouses"])
-    def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(request, *args, **kwargs)
-
-    @permission_required(["manageWarehouses"])
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        self.perform_destroy(instance)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-@permission_classes([IsBlacklisted])
-class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
+class DonorViewSet(PermissionRequiredViewSet):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
-    filter_backends = [
-        DjangoFilterBackend,
-        filters.OrderingFilter,
-        filters.SearchFilter,
-    ]
     filter_backends = [
         DjangoFilterBackend,
         filters.OrderingFilter,
@@ -201,37 +139,56 @@ class DonorViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "address",
         "email",
         "phone",
-        "mac_address",
     ]
     ordering_fields = ["name", "email", "phone"]
     ordering = ["name"]
+    permission_required_map = {
+        'get': ['manageDonors'],
+        'post': ['manageDonors'],
+        'put': ['manageDonors'],
+        'patch': ['manageDonors'],
+        'delete': ['manageDonors'],
+    }
 
-    @permission_required(["manageDonors"])
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-    @permission_required(["manageDonors"])
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
-
-    @permission_required(["manageDonors"])
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
-
-    @permission_required(["manageDonors"])
-    def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(request, *args, **kwargs)
-
-    @permission_required(["manageDonors"])
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        self.perform_destroy(instance)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+class ShipmentViewSet(PermissionRequiredViewSet):
+    queryset = Shipment.objects.all()
+    serializer_class = ShipmentSerializer
+    pagination_class = CustomPagination
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
+    filterset_fields = {
+        "shipping_id": ["exact"],
+        "destination__name": ["exact", "icontains"],
+        "arrived": ["exact"],
+        "date_shipped": ["exact", "gte", "lte"],
+        "date_delivered": ["exact", "gte", "lte"],
+        "tracking_identifier": ["icontains"],
+    }
+    search_fields = [
+        "tracking_identifier",
+        "destination__name",
+    ]
+    ordering_fields = [
+        "shipping_id",
+        "date_shipped",
+        "date_delivered",
+        "tracking_identifier",
+    ]
+    ordering = ["date_shipped"]
+    permission_required_map = {
+        'get': ['manageShipments'],
+        'post': ['manageShipments'],
+        'put': ['manageShipments'],
+        'patch': ['manageShipments'],
+        'delete': ['manageShipments'],
+    }
 
 @api_view(["PATCH", "DELETE"])
 @permission_classes([IsBlacklisted])
+@permission_required('batchUploadDevices')
 def batch_operations(request):
     model_name = "devices." + request.query_params.get("model").capitalize()
     model = get_model(model_name)
