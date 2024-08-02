@@ -47,11 +47,6 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "start_location__name": ["exact", "icontains"],
         "end_location__name": ["exact", "icontains"],
         "created_by__username": ["exact", "icontains"],
-        "destination__name": ["exact", "icontains"],
-        "arrived": ["exact"],
-        "date_shipped": ["exact", "gte", "lte"],
-        "date_delivered": ["exact", "gte", "lte"],
-        "tracking_identifier": ["exact", "icontains"],
     }
     search_fields = [
         "device_id",
@@ -65,8 +60,6 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "start_location__name",
         "end_location__name",
         "created_by__username",
-        "destination__name",
-        "tracking_identifier",
     ]
     ordering_fields = [
         "type",
@@ -79,11 +72,6 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "start_location__name",
         "end_location__name",
         "created_by__username",
-        "destination__name",
-        "arrived",
-        "date_shipped",
-        "date_delivered",
-        "tracking_identifier",
     ]
     ordering = ["type"]
 
