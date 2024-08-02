@@ -28,17 +28,12 @@ So far, the backend system consists of four Django apps:
     - Handles user authentication and authorization.
     - Implements multi-factor authentication.
 
-2. **devices**:
-    - Manages device metadata, including CRUD operations.
+2. **inventory**:
+    - Manages device, shipment, location and donor metadata, including CRUD operations.
 
 3. **users**:
     - Endpoints for user management and permission verification.
     - Implements role-based access control.
-
-4. **admin** (TODO):
-    - Manages user accounts and roles.
-
-## API Endpoints
 
 ### User Endpoints
 
