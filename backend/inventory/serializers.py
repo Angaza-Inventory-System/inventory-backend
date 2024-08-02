@@ -9,7 +9,7 @@ Serializers:
 
 from rest_framework import serializers
 
-from .models import Device, Donor, Warehouse
+from .models import Device, Donor, Location
 
 
 class DeviceSerializer(serializers.ModelSerializer):
@@ -21,7 +21,7 @@ class DeviceSerializer(serializers.ModelSerializer):
 
 class WarehouseSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Warehouse
+        model = Location
         fields = "__all__"
 
 

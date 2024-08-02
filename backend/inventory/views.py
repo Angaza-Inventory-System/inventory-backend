@@ -14,7 +14,7 @@ from backend.users.decorators import permission_required
 
 from .error_utils import handle_exception
 from .mixins import SearchAndLimitMixin
-from .models import Device, Donor, User, Warehouse
+from .models import Device, Donor, Location, User
 from .pagination import CustomPagination
 from .serializers import DeviceSerializer, DonorSerializer, WarehouseSerializer
 
@@ -113,7 +113,7 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
 
 @permission_classes([IsBlacklisted])
 class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
-    queryset = Warehouse.objects.all()
+    queryset = Location.objects.all()
     serializer_class = WarehouseSerializer
     filter_backends = [
         DjangoFilterBackend,
@@ -310,13 +310,13 @@ def generate_mock_data(request):
         new_donors = generate_mock_donor(num_donors)
 
         # Create warehouse and donor objects
-        created_warehouses = Warehouse.objects.bulk_create(
-            [Warehouse(**w) for w in new_warehouses]
+        created_warehouses = Location.objects.bulk_create(
+            [Location(**w) for w in new_warehouses]
         )
         created_donors = Donor.objects.bulk_create([Donor(**d) for d in new_donors])
 
         # Get all warehouses, donors, and users for device creation
-        all_warehouses = list(Warehouse.objects.all())
+        all_warehouses = list(Location.objects.all())
         all_donors = list(Donor.objects.all())
         all_users = list(User.objects.all())
 

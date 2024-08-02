@@ -1,6 +1,6 @@
 from haystack import indexes
 
-from .models import Device, Donor, Warehouse
+from .models import Device, Donor, Location
 
 
 class DeviceIndex(indexes.SearchIndex, indexes.Indexable):
@@ -54,7 +54,7 @@ class WarehouseIndex(indexes.SearchIndex, indexes.Indexable):
 
     @staticmethod
     def get_model():
-        return Warehouse
+        return Location
 
     def index_queryset(self, using=None):
         return self.get_model().objects.all()

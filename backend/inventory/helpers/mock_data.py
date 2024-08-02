@@ -4,14 +4,14 @@ from datetime import timedelta
 from django.db.models import Max
 from django.utils import timezone
 
-from ..models import Device, Donor, Warehouse
+from ..models import Device, Donor, Location
 
 
 def generate_mock_warehouse(num_warehouses):
     warehouses = []
     # Get the maximum existing warehouse number
     max_warehouse_number = (
-        Warehouse.objects.aggregate(Max("warehouse_number"))["warehouse_number__max"]
+        Location.objects.aggregate(Max("warehouse_number"))["warehouse_number__max"]
         or 0
     )
 

@@ -7,38 +7,59 @@ from django.utils.translation import gettext_lazy as _
 from backend.users.models import User
 
 
-class Warehouse(models.Model):
+class Shipping(models.Model):
+    shipping_id = models.AutoField(primary_key=True)
+    destination = models.ForeignKey(
+        "Location",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="destination_shipments",
+    )
+    arrived = models.BooleanField(default=False)
+    date_shipped = models.DateField()
+    date_delivered = models.DateField(null=True)
+    tracking_identifier = models.CharField(max_length=100, blank=True)
+
+
+class Location(models.Model):
     """
     Represents a warehouse in the inventory system.
 
     Attributes:
-        warehouse_number (int): The physical identifier for the warehouse, not
-            randomly generated.
-            - Constraints:
-                - Must be an integer (primary key).
+        warehouse_number (int): The physical identifier for the warehouse, automatically generated.
+        - Constraints:
+            - Automatically generated (AutoField).
         name (str): The name of the warehouse.
             - Constraints:
                 - Must be between 1 and 255 characters in length.
+        type (str): The type of the warehouse.
+            - Constraints:
+                - Must be between 1 and 100 characters in length.
+        address (str): The address of the warehouse.
+            - Constraints:
+                - No specific constraints
         country (str): The country where the warehouse is located.
             - Constraints:
                 - Must be between 1 and 100 characters in length.
         city (str): The city where the warehouse is located.
             - Constraints:
                 - Must be between 1 and 100 characters in length.
-        postal_code (str): The postal code of the warehouse's location.
+        postal_code (str): The postal code of the warehouse.
             - Constraints:
                 - Must be between 1 and 20 characters in length.
         phone (str): The phone number of the warehouse.
             - Constraints:
-                - Must be between 1 and 20 characters in length.
+                - Must be between 1 and 20 characters in
     """
 
-    warehouse_number = models.IntegerField(primary_key=True, blank=True)
+    location_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
+    type = models.CharField(max_length=100)
+    address = models.TextField(max_length=500)
     country = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     postal_code = models.CharField(max_length=20)
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20, blank=True)
 
 
 class Donor(models.Model):
@@ -125,9 +146,6 @@ class Device(models.Model):
         operating_system (CharField): The operating system of the device.
             - Constraints:
                 - Must be between 1 and 100 characters in length.
-        accessories (TextField): The accessories of the device.
-            - Constraints:
-                - No specific constraints.
         donor (ForeignKey): The donor of the device.
             - Constraints:
                 - Must be a foreign key to the Donor model (ForeignKey).
@@ -143,9 +161,6 @@ class Device(models.Model):
         created_by (ForeignKey): The user to whom the device is assigned.
             - Constraints:
                 - Must be a foreign key to the User model (ForeignKey).
-        status (CharField): The status of the device.
-            - Constraints:
-                - Must be between 1 and 100 characters in length.
         distributor (CharField): The distributor of the device.
             - Constraints:
                 - Must be between 1 and 100 characters in length.
@@ -175,7 +190,6 @@ class Device(models.Model):
     )
     year_of_manufacture = models.IntegerField()
     date_received = models.DateField()
-
     created_by = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -199,8 +213,13 @@ class Device(models.Model):
     )
     date_of_donation = models.DateField()
     value = models.DecimalField(max_digits=10, decimal_places=2)
-    warehouse = models.ForeignKey(
-        Warehouse, on_delete=models.SET_NULL, null=True, related_name="stored_items"
+    start_location = models.ForeignKey(
+        Location, on_delete=models.SET_NULL, null=True, related_name="stored_items"
     )
-    distributor = models.CharField(max_length=100)
+    end_location = models.ForeignKey(
+        Location, on_delete=models.SET_NULL, null=True, related_name="received_items"
+    )
     notes = models.TextField(blank=True)
+    shipping_infos = models.ManyToManyField(
+        Shipping, related_name="devices", blank=True
+    )
