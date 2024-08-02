@@ -5,11 +5,7 @@ from rest_framework.response import Response
 
 from backend.authen.permissions import IsBlacklisted
 from backend.inventory.helpers.batch_operations import get_model, validate_ids
-from backend.inventory.helpers.mock_data import (
-    generate_mock_device,
-    generate_mock_donor,
-    generate_mock_warehouse,
-)
+from backend.inventory.helpers.mock_data import create_mock_data
 from backend.users.decorators import permission_required
 
 from .error_utils import handle_exception
@@ -289,38 +285,21 @@ def batch_delete(request, model):
 @api_view(["POST"])
 def generate_mock_data(request):
     try:
-        num_warehouses = request.data.get("num_warehouses", 5)
+        num_locations = request.data.get("num_locations", 5)
         num_donors = request.data.get("num_donors", 10)
         num_devices = request.data.get("num_devices", 50)
+        num_shipping = request.data.get("num_shipping", 20)
 
         # Generate mock data
-        new_warehouses = generate_mock_warehouse(num_warehouses)
-        new_donors = generate_mock_donor(num_donors)
-
-        # Create warehouse and donor objects
-        created_warehouses = Location.objects.bulk_create(
-            [Location(**w) for w in new_warehouses]
+        result = create_mock_data(
+            num_locations=num_locations,
+            num_donors=num_donors,
+            num_devices=num_devices,
+            num_shipping=num_shipping,
         )
-        created_donors = Donor.objects.bulk_create([Donor(**d) for d in new_donors])
-
-        # Get all warehouses, donors, and users for device creation
-        all_warehouses = list(Location.objects.all())
-        all_donors = list(Donor.objects.all())
-        all_users = list(User.objects.all())
-
-        # Generate and create device objects
-        new_devices = generate_mock_device(
-            num_devices, all_warehouses, all_donors, all_users
-        )
-        created_devices = Device.objects.bulk_create([Device(**d) for d in new_devices])
 
         return Response(
-            {
-                "message": "Mock data generated successfully",
-                "warehouses_created": len(created_warehouses),
-                "donors_created": len(created_donors),
-                "devices_created": len(created_devices),
-            },
+            {"message": "Mock data generated successfully", **result},
             status=status.HTTP_201_CREATED,
         )
     except Exception as e:
