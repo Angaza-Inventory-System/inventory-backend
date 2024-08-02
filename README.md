@@ -1,3 +1,5 @@
+Here's the updated README with the additional user management URL information included:
+
 # Backend
 
 ## Installation
@@ -20,70 +22,128 @@ python manage.py runserver
 
 ## Django Apps
 
-So far, the backend system consists of three Django apps:
+So far, the backend system consists of four Django apps:
 
-1. authen:
-
+1. **authen**:
     - Handles user authentication and authorization.
     - Implements multi-factor authentication.
 
-2. devices:
-
+2. **devices**:
     - Manages device metadata, including CRUD operations.
 
-3. users:
-
-    - Endpoints for permission verification.
+3. **users**:
+    - Endpoints for user management and permission verification.
     - Implements role-based access control.
 
-4. admin (TODO):
-
+4. **admin** (TODO):
     - Manages user accounts and roles.
 
 ## API Endpoints
 
--   `/users/`
+### User Endpoints
 
-    -   GET: Retrieve a list of all users
+- **`GET {{base_url}}/users/users/`**
+  - List all users.
+- **`POST {{base_url}}/users/users/`**
+  - Create a new user.
+- **`GET {{base_url}}/users/users/{id}/`**
+  - Retrieve a specific user.
+- **`PUT {{base_url}}/users/users/{id}/`**
+  - Update a specific user.
+- **`PATCH {{base_url}}/users/users/{id}/`**
+  - Partially update a specific user.
+- **`DELETE {{base_url}}/users/users/{id}/`**
+  - Delete a specific user.
 
--   `/users/register/`
+### User Registration
 
-    -   POST: Create a new user.
+- **`POST {{base_url}}/users/register/`**
+  - Register a new user. This endpoint is for user creation and registration.
 
--   `/users/<int:pk>/`
+### User Password Update
 
-    -   PUT: Update details of a specific user.
-    -   DELETE: Delete a specific user.
+- **`PATCH {{base_url}}/users/password/`**
+  - Update the password of the currently authenticated user.
 
--   `/inventory/`
+### User Permissions Endpoints
 
-    -   GET: Retrieve a list of all devices with pagination and filtering.
-    -   POST: Create a new device.
+- **`GET {{base_url}}/users/user-permissions/<str:username>/`**
+  - Retrieve permissions for a specific user by username.
+- **`PATCH {{base_url}}/users/user-permissions/<str:username>/`**
+  - Partially update permissions for a specific user by username.
+- **`PUT {{base_url}}/users/user-permissions/<str:username>/`**
+  - Update all permissions for a specific user by username.
+- **`DELETE {{base_url}}/users/user-permissions/<str:username>/`**
+  - Delete a specific user's permissions by username.
+- **`DELETE {{base_url}}/users/user-permissions/<str:username>/clear/`**
+  - Remove all permissions for a specific user by username.
 
--   `/inventory/<uuid:pk>/`
+### Device Endpoints
 
-    -   PUT: Update details of a specific device.
-    -   DELETE: Delete a specific device.
+- **`GET {{base_url}}/inventory/devices/`**
+  - List all devices.
+- **`POST {{base_url}}/inventory/devices/`**
+  - Create a new device.
+- **`GET {{base_url}}/inventory/devices/{id}/`**
+  - Retrieve a specific device.
+- **`PUT {{base_url}}/inventory/devices/{id}/`**
+  - Update a specific device.
+- **`PATCH {{base_url}}/inventory/devices/{id}/`**
+  - Partially update a specific device.
+- **`DELETE {{base_url}}/inventory/devices/{id}/`**
+  - Delete a specific device.
 
--   `/inventory/warehouses/`
+### Location Endpoints
 
-    -   GET: Retrieve a list of all warehouses.
-    -   POST: Create a new warehouse.
+- **`GET {{base_url}}/inventory/locations/`**
+  - List all locations.
+- **`POST {{base_url}}/inventory/locations/`**
+  - Create a new location.
+- **`GET {{base_url}}/inventory/locations/{id}/`**
+  - Retrieve a specific location.
+- **`PUT {{base_url}}/inventory/locations/{id}/`**
+  - Update a specific location.
+- **`PATCH {{base_url}}/inventory/locations/{id}/`**
+  - Partially update a specific location.
+- **`DELETE {{base_url}}/inventory/locations/{id}/`**
+  - Delete a specific location.
 
--   `/inventory/warehouses/<int:pk>/`
+### Donor Endpoints
 
-    -   PUT: Update details of a specific warehouse.
-    -   DELETE: Delete a specific warehouse.
+- **`GET {{base_url}}/inventory/donors/`**
+  - List all donors.
+- **`POST {{base_url}}/inventory/donors/`**
+  - Create a new donor.
+- **`GET {{base_url}}/inventory/donors/{id}/`**
+  - Retrieve a specific donor.
+- **`PUT {{base_url}}/inventory/donors/{id}/`**
+  - Update a specific donor.
+- **`PATCH {{base_url}}/inventory/donors/{id}/`**
+  - Partially update a specific donor.
+- **`DELETE {{base_url}}/inventory/donors/{id}/`**
+  - Delete a specific donor.
 
--   `/inventory/donors/`
+### Shipment Endpoints
 
-    -   GET: Retrieve a list of all donors or create a new donor.
-    -   POST: Create a new donor.
+- **`GET {{base_url}}/inventory/shipments/`**
+  - List all shipments.
+- **`POST {{base_url}}/inventory/shipments/`**
+  - Create a new shipment.
+- **`GET {{base_url}}/inventory/shipments/{id}/`**
+  - Retrieve a specific shipment.
+- **`PUT {{base_url}}/inventory/shipments/{id}/`**
+  - Update a specific shipment.
+- **`PATCH {{base_url}}/inventory/shipments/{id}/`**
+  - Partially update a specific shipment.
+- **`DELETE {{base_url}}/inventory/shipments/{id}/`**
+  - Delete a specific shipment.
 
--   `/inventory/donors/<int:pk>/`
+### Batch Operations
 
-    -   PUT: Update details of a specific donor.
-    -   DELETE: Delete a specific donor.
+- **`POST {{base_url}}/inventory/batch/`**
+  - Perform batch operations (create, update, or delete) on records for devices, donors, locations, or shipments.
 
--   `/login/`
-    -   POST: Authenticate a user and return a JWT
+### Mock Data Generation
+
+- **`POST {{base_url}}/inventory/generate-mock-data/`**
+  - Populate the database with sample data for testing purposes.
