@@ -1,5 +1,7 @@
-{{ object.warehouse_number }}
+{{ object.location_id }}
 {{ object.name }}
+{{ object.type }}
+{{ object.address }}
 {{ object.country }}
 {{ object.city }}
 {{ object.postal_code }}
