@@ -24,12 +24,13 @@ UserLoginSerializer Validation:
 """
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.utils import timezone
 from rest_framework import serializers, status
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.core.validators import RegexValidator
-from django.core.exceptions import ValidationError
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from backend.authen.models import JWTToken
 
 from .models import User
@@ -61,6 +62,7 @@ class UserPermissionsSerializer(serializers.ModelSerializer):
         model = User
         fields = ["permissions"]
 
+
 class UserPasswordSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -69,7 +71,7 @@ class UserPasswordSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
         password_validator = RegexValidator(
             regex="^(?=.*\\d)(?=.*[!@#$%^&*])(?=.*[A-Z]).{10,128}$",
-            message="Password must be at least 10 characters long and include at least one digit, one special character, and one uppercase letter."
+            message="Password must be at least 10 characters long and include at least one digit, one special character, and one uppercase letter.",
         )
         try:
             password_validator(self.password)
@@ -88,7 +90,9 @@ class UserLoginSerializer(serializers.Serializer):
 
         user = User.objects.filter(username=username).first()
         if user is None or not user.check_password(password):
-            raise serializers.ValidationError(f"Invalid username or password {user} {user.check_password(password)}")
+            raise serializers.ValidationError(
+                f"Invalid username or password {user} {user.check_password(password)}"
+            )
 
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)

@@ -1,5 +1,6 @@
 from .utils import allPermissions
 
+
 def getAllPermissions():
     return allPermissions
 

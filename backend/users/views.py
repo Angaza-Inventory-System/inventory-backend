@@ -11,10 +11,14 @@ from backend.inventory.pagination import CustomPagination
 
 from .helpers import getValidPermissions, updatePermissions
 from .models import User
-from .serializers import UserPermissionsSerializer, UserSerializer, UserPasswordSerializer
+from .serializers import (
+    UserPasswordSerializer,
+    UserPermissionsSerializer,
+    UserSerializer,
+)
 
 
-@permission_classes([AllowAny]) 
+@permission_classes([AllowAny])
 class UserCreate(generics.CreateAPIView):
     serializer_class = UserSerializer
 
@@ -60,7 +64,10 @@ class UserPasswordUpdateView(generics.UpdateAPIView):
         request = self.request
         auth_result = jwt_auth.authenticate(request)
         if auth_result is None:
-            return Response({"Error: Missing authentication token"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"Error: Missing authentication token"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         user, _ = auth_result
         return user
 
@@ -68,9 +75,11 @@ class UserPasswordUpdateView(generics.UpdateAPIView):
         user = self.get_object()
         serializer = self.get_serializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        user.set_password(serializer.validated_data['password'])
+        user.set_password(serializer.validated_data["password"])
         user.save()
-        return Response({"detail": "Password updated successfully."}, status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "Password updated successfully."}, status=status.HTTP_200_OK
+        )
 
 
 @permission_classes([IsBlacklisted])
