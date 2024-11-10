@@ -65,15 +65,15 @@ So far, the backend system consists of three Django apps:
     -   PUT: Update details of a specific device.
     -   DELETE: Delete a specific device.
 
--   `/inventory/warehouses/`
+-   `/inventory/locations/`
 
-    -   GET: Retrieve a list of all warehouses.
-    -   POST: Create a new warehouse.
+    -   GET: Retrieve a list of all locations.
+    -   POST: Create a new location.
 
--   `/inventory/warehouses/<int:pk>/`
+-   `/inventory/locations/<int:pk>/`
 
-    -   PUT: Update details of a specific warehouse.
-    -   DELETE: Delete a specific warehouse.
+    -   PUT: Update details of a specific location.
+    -   DELETE: Delete a specific location.
 
 -   `/inventory/donors/`
 
