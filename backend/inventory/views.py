@@ -96,7 +96,7 @@ class DeviceViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
 
 
 @permission_classes([IsBlacklisted])
-class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
+class LocationViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
     queryset = Location.objects.all()
     serializer_class = WarehouseSerializer
     filter_backends = [
@@ -110,7 +110,7 @@ class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         filters.SearchFilter,
     ]
     filterset_fields = {
-        "warehouse_number": ["exact"],
+        "location_id": ["exact"],
         "name": ["icontains"],
         "country": ["exact", "icontains"],
         "city": ["exact", "icontains"],
@@ -125,14 +125,14 @@ class WarehouseViewSet(SearchAndLimitMixin, viewsets.ModelViewSet):
         "phone",
     ]
     ordering_fields = [
-        "warehouse_number",
+        "location_id",
         "name",
         "country",
         "city",
         "postal_code",
         "phone",
     ]
-    ordering = ["warehouse_number"]
+    ordering = ["location_id"]
 
     @permission_required(["manageWarehouses"])
     def list(self, request, *args, **kwargs):

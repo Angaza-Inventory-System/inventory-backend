@@ -43,9 +43,9 @@ class DonorIndex(indexes.SearchIndex, indexes.Indexable):
         return self.get_model().objects.all()
 
 
-class WarehouseIndex(indexes.SearchIndex, indexes.Indexable):
+class LocationIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    warehouse_number = indexes.CharField(model_attr="warehouse_number")
+    location_id = indexes.CharField(model_attr="location_id")
     name = indexes.CharField(model_attr="name")
     country = indexes.CharField(model_attr="country")
     city = indexes.CharField(model_attr="city")
